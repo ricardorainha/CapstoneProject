@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "929872666692",
+    "firebase_url": "https://mustache-4bff7.firebaseio.com",
+    "project_id": "mustache-4bff7",
+    "storage_bucket": "mustache-4bff7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929872666692:android:716987aac86b50ef",
+        "android_client_info": {
+          "package_name": "com.ricardorainha.mustache"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929872666692-vc56tbggivpek81gu3en6iepf7k1qdtv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ricardorainha.mustache",
+            "certificate_hash": "80e909fbdec008ce5134ab7beccca086e88a192a"
+          }
+        },
+        {
+          "client_id": "929872666692-m4djd8nb0sg81bddn77k4dndjtc3aagc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR8aRRuD5f99RhDM10OO4Np-g4hsMiQO8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929872666692-m4djd8nb0sg81bddn77k4dndjtc3aagc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
