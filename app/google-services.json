@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "929872666692-gam42j6rnktimn6mg50r548mt9td4sf9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ricardorainha.mustache",
+            "certificate_hash": "7dfe8a8210612f1e6c9fe33910f4a86b7b2c591d"
+          }
+        },
+        {
           "client_id": "929872666692-m4djd8nb0sg81bddn77k4dndjtc3aagc.apps.googleusercontent.com",
           "client_type": 3
         }
