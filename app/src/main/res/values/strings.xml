@@ -6,8 +6,8 @@
     <string name="facebook_login_protocol_scheme" translatable="false">fb262994831302065</string>
     <string name="title_activity_login">Sign in</string>
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_email">E-mail</string>
+    <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
@@ -25,4 +25,5 @@
     <string name="user_login_unknown_error_message">Unknown error signing in</string>
     <string name="user_login_fail_message">Error signing in. %s</string>
     <string name="user_login_email_not_verified_message">Before signing in, you need to verify your e-mail address. Check your e-mail to do it and try again.</string>
+    <string name="profile">User Profile</string>
 </resources>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.authentication.AuthManager;
+import com.ricardorainha.mustache.utils.SharedPrefUtils;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -20,8 +21,11 @@ public class MainActivity extends AppCompatActivity {
         if (shouldShowLogin()) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
-
             finish();
+        }
+        else if (!SharedPrefUtils.hasCompletedProfile(this)) {
+            Intent profileIntent = new Intent(this, ProfileActivity.class);
+            startActivity(profileIntent);
         }
 
     }
