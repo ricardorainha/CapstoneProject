@@ -3,4 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="sign_in_button">#DB4437</color>
+    <color name="google_login_button">#FFFFFF</color>
+    <color name="facebook_login_button">#3B5998</color>
+    <color name="sign_up_button">#009587</color>
 </resources>
