@@ -33,20 +33,12 @@ import androidx.loader.content.Loader;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
-// TODO: Turn into MVVM
-/**
- * A login screen that offers login via email/password.
- */
 public class LoginActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-
-    ActivityLoginBinding binding;
-    LoginActivityViewModel viewModel;
+    private ActivityLoginBinding binding;
+    private LoginActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
