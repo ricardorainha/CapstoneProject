@@ -25,6 +25,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -35,7 +37,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements AuthManager.AuthStateChange, LoaderManager.LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -44,12 +46,58 @@ public class LoginActivity extends AppCompatActivity implements AuthManager.Auth
 
 
     ActivityLoginBinding binding;
+    LoginActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        viewModel = ViewModelProviders.of(this).get(LoginActivityViewModel.class);
+        binding.setViewModel(viewModel);
+
+        configureObservables();
         configureFields();
+    }
+
+    private void configureObservables() {
+        viewModel.getLoading().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                showProgress(viewModel.getLoading().get());
+            }
+        });
+
+        viewModel.getSignedIn().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                if (viewModel.getSignedIn().get()) {
+                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(mainIntent);
+                    finish();
+                }
+                else {
+                    String finalMessage = (viewModel.getMessage() == null) ? getString(viewModel.getMessageId()) : getString(viewModel.getMessageId(), viewModel.getMessage());
+                    Snackbar.make(binding.loginRoot, finalMessage, Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        viewModel.getSignedUp().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                if (viewModel.getSignedUp().get()) {
+                    String finalMessage = (viewModel.getMessage() == null) ? getString(viewModel.getMessageId()) : getString(viewModel.getMessageId(), viewModel.getMessage());
+                    Snackbar.make(binding.loginRoot, finalMessage, Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void configureFields() {
+        populateAutoComplete();
+
+        // TODO: add Google Sign In
+        // TODO: add Facebook Sign In
     }
 
     private void populateAutoComplete() {
@@ -76,28 +124,6 @@ public class LoginActivity extends AppCompatActivity implements AuthManager.Auth
         return false;
     }
 
-    private void configureFields() {
-        populateAutoComplete();
-        binding.signInButton.setOnClickListener(view -> {
-            if (fieldsAreValid()) {
-                doSignIn();
-            }
-        });
-
-        // TODO: add Google Sign In
-
-        // TODO: add Facebook Sign In
-
-        binding.signUpButton.setOnClickListener(view -> {
-            if (fieldsAreValid()) {
-                doSignUp();
-            }
-        });
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -108,12 +134,6 @@ public class LoginActivity extends AppCompatActivity implements AuthManager.Auth
         }
     }
 
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private boolean fieldsAreValid() {
         // Reset errors.
         binding.email.setError(null);
@@ -154,34 +174,21 @@ public class LoginActivity extends AppCompatActivity implements AuthManager.Auth
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
     private void doSignIn() {
-        String email = binding.email.getText().toString();
-        String password = binding.password.getText().toString();
-
-        showProgress(true);
-        AuthManager.getInstance().signInWithEmailAndPassword(email, password, this);
+        viewModel.doSignIn();
     }
 
     private void doSignUp() {
-        String email = binding.email.getText().toString();
-        String password = binding.password.getText().toString();
-
-        showProgress(true);
-        AuthManager.getInstance().createUserWithEmailAndPassword(email, password, this);
+        viewModel.doSignUp();
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -248,54 +255,17 @@ public class LoginActivity extends AppCompatActivity implements AuthManager.Auth
         binding.email.setAdapter(adapter);
     }
 
-    @Override
-    public void onUserCreateFinished(int resultCode, String message) {
-        showProgress(false);
-
-        int messageId = R.string.user_create_unknown_error_message;
-
-        switch (resultCode) {
-            case AuthManager.RESULT_USER_CREATE_FAIL:
-                messageId = R.string.user_create_fail_message;
-                break;
-            case AuthManager.RESULT_USER_CREATE_EMAIL_SENT_FAIL:
-                messageId = R.string.user_create_email_sent_fail_message;
-                break;
-            case AuthManager.RESULT_USER_CREATE_EMAIL_SENT_SUCCESS:
-                messageId = R.string.user_create_email_sent_success_message;
-                break;
-        }
-
-        String finalMessage = (message == null) ? getString(messageId) : getString(messageId, message);
-        Snackbar.make(binding.loginRoot, finalMessage, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onUserSignInFinished(int resultCode, String message) {
-        showProgress(false);
-
-        if (resultCode == AuthManager.RESULT_USER_SIGN_IN_SUCCESS) {
-            Intent mainIntent = new Intent(this, MainActivity.class);
-            startActivity(mainIntent);
-            finish();
-        }
-        else {
-            int messageId = R.string.user_login_unknown_error_message;
-
-            switch (resultCode) {
-                case AuthManager.RESULT_USER_SIGN_IN_FAIL:
-                    messageId = R.string.user_login_fail_message;
-                    break;
-                case AuthManager.RESULT_USER_SIGN_IN_NEED_VERIFY_EMAIL:
-                    messageId = R.string.user_login_email_not_verified_message;
-                    break;
-            }
-
-            String finalMessage = (message == null) ? getString(messageId) : getString(messageId, message);
-            Snackbar.make(binding.loginRoot, finalMessage, Snackbar.LENGTH_LONG).show();
+    public void onSignInClicked(View view) {
+        if (fieldsAreValid()) {
+            doSignIn();
         }
     }
 
+    public void onSignUpClicked(View view) {
+        if (fieldsAreValid()) {
+            doSignUp();
+        }
+    }
 
     private interface ProfileQuery {
         String[] PROJECTION = {
