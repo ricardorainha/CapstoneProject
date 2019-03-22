@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.ActivityProfileBinding;
+import com.ricardorainha.mustache.utils.SharedPrefUtils;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -82,6 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void configureFields() {
+
         if (viewModel.getUserPhotoReference().get() != null) {
             setUserProfilePhoto();
         }
@@ -107,6 +109,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (viewModel.getMustFinish().get()) {
+                    SharedPrefUtils.setCompletedProfile(ProfileActivity.this, false);
                     finish();
                 }
             }
