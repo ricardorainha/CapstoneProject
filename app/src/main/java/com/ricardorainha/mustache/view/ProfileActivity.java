@@ -38,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(ProfileActivityViewModel.class);
         binding.setViewModel(viewModel);
 
+        SharedPrefUtils.setCompletedProfile(this, true);
         configureObservables();
         configureFields();
     }
@@ -83,7 +84,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void configureFields() {
-
         if (viewModel.getUserPhotoReference().get() != null) {
             setUserProfilePhoto();
         }

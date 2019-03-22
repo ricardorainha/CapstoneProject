@@ -18,10 +18,12 @@
         <activity
             android:name=".view.ProfileActivity"
             android:parentActivityName=".view.MainActivity"
+            android:launchMode="singleTask"
             android:label="@string/profile" />
         <activity
             android:name=".view.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask"
             android:label="@string/title_activity_login" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -42,7 +44,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ricardorainha.mustache.view.MainActivity" />
         </activity>
-        <activity android:name=".view.MainActivity">
+        <activity
+            android:name=".view.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
