@@ -17,7 +17,7 @@ public class SharedPrefUtils {
         return getSharedPref(context).getBoolean(COMPLETED_PROFILE, false);
     }
 
-    public void setCompletedProfile(Context context, boolean completed) {
+    public static void setCompletedProfile(Context context, boolean completed) {
         getSharedPref(context).edit().putBoolean(COMPLETED_PROFILE, completed).apply();
     }
 

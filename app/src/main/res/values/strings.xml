@@ -8,14 +8,11 @@
     <!-- Strings related to login -->
     <string name="prompt_email">E-mail</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
-    <string name="title_activity_login2">Sign in</string>
     <!-- Account creation messages -->
     <string name="user_create_unknown_error_message">Unknown error creating account</string>
     <string name="user_create_fail_message">Error creating account. %s</string>
@@ -26,4 +23,11 @@
     <string name="user_login_fail_message">Error signing in. %s</string>
     <string name="user_login_email_not_verified_message">Before signing in, you need to verify your e-mail address. Check your e-mail to do it and try again.</string>
     <string name="profile">User Profile</string>
+    <string name="save_my_profile">Save My Profile</string>
+    <string name="name">Name</string>
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+    <string name="password_confirmation">Password Confirmation</string>
+    <string name="phone_number">Phone Number (optional)</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

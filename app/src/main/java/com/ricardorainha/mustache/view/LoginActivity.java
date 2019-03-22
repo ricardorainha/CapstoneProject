@@ -3,10 +3,7 @@ package com.ricardorainha.mustache.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,7 +12,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -29,6 +25,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -36,7 +35,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, AuthManager.AuthStateChange {
+public class LoginActivity extends AppCompatActivity implements AuthManager.AuthStateChange, LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -58,7 +57,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return;
         }
 
-        getLoaderManager().initLoader(0, null, this);
+        LoaderManager.getInstance(this).initLoader(0, null, this);
     }
 
     private boolean mayRequestContacts() {
@@ -70,13 +69,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
             Snackbar.make(binding.email, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
+                    .setAction(android.R.string.ok, v -> requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS));
         } else {
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
         }
@@ -85,12 +78,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private void configureFields() {
         populateAutoComplete();
-        binding.signInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (fieldsAreValid()) {
-                    doSignIn();
-                }
+        binding.signInButton.setOnClickListener(view -> {
+            if (fieldsAreValid()) {
+                doSignIn();
             }
         });
 
@@ -98,12 +88,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // TODO: add Facebook Sign In
 
-        binding.signUpButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (fieldsAreValid()) {
-                    doSignUp();
-                }
+        binding.signUpButton.setOnClickListener(view -> {
+            if (fieldsAreValid()) {
+                doSignUp();
             }
         });
     }
@@ -320,4 +307,3 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 }
-
