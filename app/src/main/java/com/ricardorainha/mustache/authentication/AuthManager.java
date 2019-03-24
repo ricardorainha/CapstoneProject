@@ -79,9 +79,17 @@ public class AuthManager {
                 });
     }
 
+    public void resetPassword(String email, final AuthStateChange listener) {
+        auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    listener.onResetPasswordFinished(task.isSuccessful());
+                });
+    }
+
     public interface AuthStateChange {
         void onUserCreateFinished(int resultCode, String message);
         void onUserSignInFinished(int resultCode, String message);
+        void onResetPasswordFinished(boolean success);
     }
 
     public void updatePassword(String password) {

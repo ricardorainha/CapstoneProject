@@ -22,6 +22,9 @@
     <string name="user_login_unknown_error_message">Unknown error signing in</string>
     <string name="user_login_fail_message">Error signing in. %s</string>
     <string name="user_login_email_not_verified_message">Before signing in, you need to verify your e-mail address. Check your e-mail to do it and try again.</string>
+    <!-- Reset password messages -->
+    <string name="reset_password_successfully">Instructions sent to %s to reset your password.</string>
+    <!-- Other -->
     <string name="profile">User Profile</string>
     <string name="save_my_profile">Save My Profile</string>
     <string name="name">Name</string>
@@ -30,4 +33,6 @@
     <string name="password_confirmation">Password Confirmation</string>
     <string name="phone_number">Phone Number (optional)</string>
     <string name="sign_out">Sign Out</string>
+    <string name="sign_me_up_button_text">No Account, Sign Me Up!</string>
+    <string name="sign_in_button_text">Sign In</string>
 </resources>

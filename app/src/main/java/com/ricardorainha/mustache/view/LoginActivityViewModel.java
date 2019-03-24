@@ -17,6 +17,7 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Aut
     private ObservableField<Boolean> loading = new ObservableField<>();
     private ObservableField<Boolean> signedIn = new ObservableField<>();
     private ObservableField<Boolean> signedUp = new ObservableField<>();
+    private ObservableField<Boolean> passwordReset = new ObservableField<>();
     private int messageId = -1;
     private String message = null;
 
@@ -52,6 +53,10 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Aut
         return signedUp;
     }
 
+    public ObservableField<Boolean> getPasswordReset() {
+        return passwordReset;
+    }
+
     public int getMessageId() {
         return messageId;
     }
@@ -68,6 +73,11 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Aut
     public void doSignUp() {
         loading.set(true);
         AuthManager.getInstance().createUserWithEmailAndPassword(email.getValue(), password.getValue(), this);
+    }
+
+    public void resetPassword() {
+        loading.set(true);
+        AuthManager.getInstance().resetPassword(email.getValue(), this);
     }
 
     @Override
@@ -114,5 +124,11 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Aut
 
             signedIn.set(false);
         }
+    }
+
+    @Override
+    public void onResetPasswordFinished(boolean success) {
+        loading.set(false);
+        passwordReset.set(success);
     }
 }

@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.ricardorainha.mustache.R;
-import com.ricardorainha.mustache.authentication.AuthManager;
 import com.ricardorainha.mustache.databinding.ActivityLoginBinding;
 
 import java.util.ArrayList;
@@ -70,6 +69,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
                 else {
                     String finalMessage = (viewModel.getMessage() == null) ? getString(viewModel.getMessageId()) : getString(viewModel.getMessageId(), viewModel.getMessage());
                     Snackbar.make(binding.loginRoot, finalMessage, Snackbar.LENGTH_LONG).show();
+
+                    if (viewModel.getMessageId() == R.string.user_login_fail_message) {
+                        binding.resetPassword.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -80,6 +83,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
                 if (viewModel.getSignedUp().get()) {
                     String finalMessage = (viewModel.getMessage() == null) ? getString(viewModel.getMessageId()) : getString(viewModel.getMessageId(), viewModel.getMessage());
                     Snackbar.make(binding.loginRoot, finalMessage, Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        viewModel.getPasswordReset().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                if (viewModel.getPasswordReset().get()) {
+                    String finalMessage = getString(R.string.reset_password_successfully, binding.email.getText().toString());
+                    Snackbar.make(binding.loginRoot, finalMessage, Snackbar.LENGTH_LONG).show();
+                    viewModel.getPasswordReset().set(false);
                 }
             }
         });
@@ -251,6 +265,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
         if (fieldsAreValid()) {
             doSignIn();
         }
+    }
+
+    public void onResetPasswordClicked(View view) {
+        if (isEmailValid(binding.email.getText().toString())) {
+            viewModel.resetPassword();
+        }
+
     }
 
     public void onSignUpClicked(View view) {
