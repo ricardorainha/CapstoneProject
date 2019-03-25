@@ -58,10 +58,12 @@ public class User {
         this.phone = phone;
     }
 
+    @Exclude
     public StorageReference getPhotoReference() {
         return FirebaseUtils.getProfilePhotoPath(getUid());
     }
 
+    @Exclude
     public static User fromFirebaseUser(FirebaseUser firebaseUser) {
         return new User(firebaseUser.getUid(), firebaseUser.getDisplayName(),
                 firebaseUser.getEmail(), firebaseUser.getPhoneNumber());

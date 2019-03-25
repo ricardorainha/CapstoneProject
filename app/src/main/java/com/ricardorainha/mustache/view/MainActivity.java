@@ -1,10 +1,5 @@
 package com.ricardorainha.mustache.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.Observable;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,9 +9,12 @@ import android.view.MenuItem;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.authentication.AuthManager;
 import com.ricardorainha.mustache.databinding.ActivityMainBinding;
-import com.ricardorainha.mustache.model.Session;
-import com.ricardorainha.mustache.utils.FirebaseUtils;
 import com.ricardorainha.mustache.utils.SharedPrefUtils;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
+import androidx.lifecycle.ViewModelProviders;
 
 
 public class MainActivity extends AppCompatActivity {

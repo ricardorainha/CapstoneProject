@@ -16,12 +16,14 @@ import android.widget.ArrayAdapter;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.ricardorainha.mustache.R;
+import com.ricardorainha.mustache.authentication.AuthManager;
 import com.ricardorainha.mustache.databinding.ActivityLoginBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
@@ -35,6 +37,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class LoginActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 3498;
 
     private ActivityLoginBinding binding;
     private LoginActivityViewModel viewModel;
@@ -274,6 +277,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
 
     }
 
+    public void onGoogleSignInClicked(View view) {
+        Intent googleSignInIntent = AuthManager.getInstance().getGsiClient(this).getSignInIntent();
+        startActivityForResult(googleSignInIntent, REQUEST_CODE_GOOGLE_SIGN_IN);
+    }
+
     public void onSignUpClicked(View view) {
         if (fieldsAreValid()) {
             doSignUp();
@@ -288,5 +296,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == RESULT_OK) {
+            viewModel.doGoogleSignIn(data);
+        }
     }
 }

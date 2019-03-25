@@ -33,9 +33,13 @@ public class FirebaseUtils {
     private static final String PHOTOS_STORAGE_EXTENSION = ".jpg";
 
     public static void createUserInfo(User user) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userReference = database.getReference(USERS_DATABASE_REFERENCE).child(user.getUid());
-        userReference.setValue(user).addOnCompleteListener(task -> Log.d(TAG, "User with UID " + user.getUid() + " created on RealtimeDatabase"));
+        requestUserInfo(user.getUid(), dbUser -> {
+            if (dbUser == null) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference userReference = database.getReference(USERS_DATABASE_REFERENCE).child(user.getUid()).getRef();
+                userReference.setValue(user).addOnCompleteListener(task -> Log.d(TAG, "User with UID " + user.getUid() + " created on RealtimeDatabase"));
+            }
+        });
     }
 
     public static void updateUserInfo(User user) {

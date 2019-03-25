@@ -1,9 +1,20 @@
 package com.ricardorainha.mustache.authentication;
 
+import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.model.User;
 import com.ricardorainha.mustache.utils.FirebaseUtils;
 
@@ -16,8 +27,10 @@ public class AuthManager {
     public static final int RESULT_USER_SIGN_IN_SUCCESS = 5;
 
     private static final AuthManager ourInstance = new AuthManager();
-    private static FirebaseAuth auth;
-    private static FirebaseUser firebaseUser;
+    private FirebaseAuth auth;
+    private FirebaseUser firebaseUser;
+    private GoogleSignInClient gsiClient = null;
+    private GoogleSignInAccount googleAccount;
 
     public static AuthManager getInstance() {
         return ourInstance;
@@ -30,6 +43,19 @@ public class AuthManager {
 
     public FirebaseUser getUser() {
         return firebaseUser;
+    }
+
+    public GoogleSignInClient getGsiClient(Context context) {
+        if (gsiClient == null) {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(context.getString(R.string.oauth_web_client_id))
+                    .requestEmail()
+                    .build();
+
+            gsiClient = GoogleSignIn.getClient(context, gso);
+        }
+
+        return gsiClient;
     }
 
     public boolean isUserLoggedIn() {
@@ -107,6 +133,30 @@ public class AuthManager {
     public void signOut() {
         auth.signOut();
         firebaseUser = auth.getCurrentUser();
+    }
+
+    public void handleGoogleSignIn(Intent gsiData, final AuthStateChange listener) {
+        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(gsiData);
+        try {
+            googleAccount = task.getResult(ApiException.class);
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+
+        if (googleAccount != null) {
+            AuthCredential googleCredential = GoogleAuthProvider.getCredential(googleAccount.getIdToken(), null);
+            auth.signInWithCredential(googleCredential)
+                    .addOnCompleteListener(task1 -> {
+                        if (task.isSuccessful()) {
+                            firebaseUser = auth.getCurrentUser();
+                            FirebaseUtils.createUserInfo(User.fromFirebaseUser(firebaseUser));
+                            listener.onUserSignInFinished(RESULT_USER_SIGN_IN_SUCCESS, null);
+                        }
+                        else {
+                            listener.onUserSignInFinished(RESULT_USER_SIGN_IN_FAIL, task.getException().getMessage());
+                        }
+                    });
+        }
     }
 
 

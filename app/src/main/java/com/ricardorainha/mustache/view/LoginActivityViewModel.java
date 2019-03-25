@@ -131,4 +131,8 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Aut
         loading.set(false);
         passwordReset.set(success);
     }
+
+    public void doGoogleSignIn(Intent gsiData) {
+        AuthManager.getInstance().handleGoogleSignIn(gsiData, this);
+    }
 }
