@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -11,6 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -30,7 +33,6 @@ public class AuthManager {
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
     private GoogleSignInClient gsiClient = null;
-    private GoogleSignInAccount googleAccount;
 
     public static AuthManager getInstance() {
         return ourInstance;
@@ -63,7 +65,17 @@ public class AuthManager {
     }
 
     public boolean needToLogin() {
-        return !(isUserLoggedIn() && firebaseUser.isEmailVerified());
+        boolean hasFacebookProvider = false;
+        if (firebaseUser != null) {
+            for (String provider : firebaseUser.getProviders()) {
+                if (provider.contains("facebook")) {
+                    hasFacebookProvider = true;
+                    break;
+                }
+            }
+        }
+
+        return !(isUserLoggedIn() && (firebaseUser.isEmailVerified() || hasFacebookProvider));
     }
 
     public void createUserWithEmailAndPassword(String email, String password, final AuthStateChange listener) {
@@ -105,7 +117,7 @@ public class AuthManager {
                 });
     }
 
-    public void resetPassword(String email, final AuthStateChange listener) {
+    public void resetPassword(String email, AuthStateChange listener) {
         auth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     listener.onResetPasswordFinished(task.isSuccessful());
@@ -132,11 +144,13 @@ public class AuthManager {
 
     public void signOut() {
         auth.signOut();
+        LoginManager.getInstance().logOut();
         firebaseUser = auth.getCurrentUser();
     }
 
-    public void handleGoogleSignIn(Intent gsiData, final AuthStateChange listener) {
+    public void handleGoogleSignIn(Intent gsiData, AuthStateChange listener) {
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(gsiData);
+        GoogleSignInAccount googleAccount = null;
         try {
             googleAccount = task.getResult(ApiException.class);
         } catch (ApiException e) {
@@ -157,6 +171,22 @@ public class AuthManager {
                         }
                     });
         }
+    }
+
+    public void handleFacebookSignIn(AccessToken token, AuthStateChange listener) {
+        AuthCredential facebookCredential = FacebookAuthProvider.getCredential(token.getToken());
+        auth.signInWithCredential(facebookCredential)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        firebaseUser = auth.getCurrentUser();
+                        FirebaseUtils.createUserInfo(User.fromFirebaseUser(firebaseUser));
+                        listener.onUserSignInFinished(RESULT_USER_SIGN_IN_SUCCESS, null);
+                    }
+                    else {
+                        listener.onUserSignInFinished(RESULT_USER_SIGN_IN_FAIL, task.getException().getMessage());
+                    }
+                });
+
     }
 
 

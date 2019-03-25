@@ -2,7 +2,9 @@ package com.ricardorainha.mustache.view;
 
 import android.content.Intent;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.authentication.AuthManager;
 
@@ -20,6 +22,18 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Aut
     private ObservableField<Boolean> passwordReset = new ObservableField<>();
     private int messageId = -1;
     private String message = null;
+    private FacebookCallback<LoginResult> facebookCallback = new FacebookCallback<LoginResult>() {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+            AuthManager.getInstance().handleFacebookSignIn(loginResult.getAccessToken(), LoginActivityViewModel.this);
+        }
+
+        @Override
+        public void onCancel() {}
+
+        @Override
+        public void onError(FacebookException error) {}
+    };
 
     public LoginActivityViewModel() {
         loading.set(false);
@@ -78,6 +92,10 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Aut
     public void resetPassword() {
         loading.set(true);
         AuthManager.getInstance().resetPassword(email.getValue(), this);
+    }
+
+    public FacebookCallback<LoginResult> getFacebookCallback() {
+        return facebookCallback;
     }
 
     @Override

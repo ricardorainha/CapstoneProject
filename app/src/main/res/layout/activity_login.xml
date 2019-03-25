@@ -149,7 +149,7 @@
                 android:text="@string/sign_in_with_google"
                 android:textColor="@android:color/black"
                 android:onClick="onGoogleSignInClicked"
-                android:drawableLeft="@drawable/googleg_standard_color_18"
+                android:drawableStart="@drawable/googleg_standard_color_18"
                 app:layout_constraintBottom_toTopOf="@+id/facebook_login_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -161,10 +161,18 @@
                 android:text="@string/sign_in_with_facebook"
                 android:textColor="@android:color/white"
                 android:onClick="onFacebookSignInClicked"
-                android:drawableLeft="@drawable/com_facebook_button_login_logo"
+                android:drawableStart="@drawable/com_facebook_button_login_logo"
                 app:layout_constraintBottom_toTopOf="@+id/sign_up_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/fb_login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/sign_up_button"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <Button
                 android:id="@+id/sign_up_button"

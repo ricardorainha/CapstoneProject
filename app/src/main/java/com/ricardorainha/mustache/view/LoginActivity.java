@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
+import com.facebook.CallbackManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.authentication.AuthManager;
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private ActivityLoginBinding binding;
     private LoginActivityViewModel viewModel;
+    private CallbackManager fbCallbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +107,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     private void configureFields() {
         populateAutoComplete();
 
-        // TODO: add Google Sign In
-        // TODO: add Facebook Sign In
+        // Original Facebook button, with visibility gone
+        binding.fbLoginButton.setReadPermissions("email");
+        fbCallbackManager = CallbackManager.Factory.create();
+        binding.fbLoginButton.registerCallback(fbCallbackManager, viewModel.getFacebookCallback());
     }
 
     private void populateAutoComplete() {
@@ -282,6 +286,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
         startActivityForResult(googleSignInIntent, REQUEST_CODE_GOOGLE_SIGN_IN);
     }
 
+    public void onFacebookSignInClicked(View view) {
+        binding.fbLoginButton.performClick();
+    }
+
     public void onSignUpClicked(View view) {
         if (fieldsAreValid()) {
             doSignUp();
@@ -301,6 +309,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        fbCallbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == RESULT_OK) {
             viewModel.doGoogleSignIn(data);
         }
