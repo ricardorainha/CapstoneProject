@@ -83,7 +83,7 @@ public class AuthManager {
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     firebaseUser = auth.getCurrentUser();
-                    FirebaseUtils.createUserInfo(User.fromFirebaseUser(firebaseUser));
+                    FirebaseUtils.createUserInfo(User.fromFirebaseUser(firebaseUser), null);
                     firebaseUser.sendEmailVerification().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
                             listener.onUserCreateFinished(RESULT_USER_CREATE_EMAIL_SENT_SUCCESS, null);
@@ -140,6 +140,10 @@ public class AuthManager {
         void onResetPasswordFinished(boolean success);
     }
 
+    public interface UserDataChange {
+        void onUserDataCreated();
+    }
+
     public interface UserStateChange {
         void onUserSignOut();
     }
@@ -178,8 +182,7 @@ public class AuthManager {
                     .addOnCompleteListener(task1 -> {
                         if (task.isSuccessful()) {
                             firebaseUser = auth.getCurrentUser();
-                            FirebaseUtils.createUserInfo(User.fromFirebaseUser(firebaseUser));
-                            listener.onUserSignInFinished(RESULT_USER_SIGN_IN_SUCCESS, null);
+                            FirebaseUtils.createUserInfo(User.fromFirebaseUser(firebaseUser), () -> listener.onUserSignInFinished(RESULT_USER_SIGN_IN_SUCCESS, null));
                         }
                         else {
                             listener.onUserSignInFinished(RESULT_USER_SIGN_IN_FAIL, task.getException().getMessage());
@@ -194,8 +197,7 @@ public class AuthManager {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         firebaseUser = auth.getCurrentUser();
-                        FirebaseUtils.createUserInfo(User.fromFirebaseUser(firebaseUser));
-                        listener.onUserSignInFinished(RESULT_USER_SIGN_IN_SUCCESS, null);
+                        FirebaseUtils.createUserInfo(User.fromFirebaseUser(firebaseUser), () -> listener.onUserSignInFinished(RESULT_USER_SIGN_IN_SUCCESS, null));
                     }
                     else {
                         listener.onUserSignInFinished(RESULT_USER_SIGN_IN_FAIL, task.getException().getMessage());

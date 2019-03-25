@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ricardorainha.mustache.authentication.AuthManager;
 import com.ricardorainha.mustache.model.Session;
 import com.ricardorainha.mustache.model.User;
 
@@ -25,12 +26,20 @@ public class FirebaseUtils {
     private static final String PHOTOS_STORAGE_REFERENCE = "photos";
     private static final String PHOTOS_STORAGE_EXTENSION = ".jpg";
 
-    public static void createUserInfo(User user) {
+    public static void createUserInfo(User user, AuthManager.UserDataChange listener) {
         requestUserInfo(user.getUid(), dbUser -> {
             if (dbUser == null) {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference userReference = database.getReference(USERS_DATABASE_REFERENCE).child(user.getUid()).getRef();
-                userReference.setValue(user).addOnCompleteListener(task -> Log.d(TAG, "User with UID " + user.getUid() + " created on RealtimeDatabase"));
+                userReference.setValue(user).addOnCompleteListener(task -> {
+                    Log.d(TAG, "User with UID " + user.getUid() + " created on RealtimeDatabase");
+                    if (listener != null) {
+                        listener.onUserDataCreated();
+                    }
+                });
+            }
+            else {
+                listener.onUserDataCreated();
             }
         });
     }
