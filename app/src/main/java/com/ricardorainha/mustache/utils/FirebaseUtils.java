@@ -1,14 +1,8 @@
 package com.ricardorainha.mustache.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +17,6 @@ import com.ricardorainha.mustache.model.User;
 import java.io.ByteArrayOutputStream;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class FirebaseUtils {
 
@@ -74,6 +67,12 @@ public class FirebaseUtils {
 
         UploadTask uploadTask = photoReference.putBytes(photoData);
         uploadTask.addOnSuccessListener(taskSnapshot -> Log.d(TAG, "Profile photo uploaded to " + taskSnapshot.getMetadata().getPath()));
+    }
+
+    public static void deleteAccount() {
+        User user = Session.getInstance().getUser().getValue();
+        getProfilePhotoPath(user.getUid()).delete();
+        FirebaseDatabase.getInstance().getReference(USERS_DATABASE_REFERENCE).child(user.getUid()).removeValue();
     }
 
     public static StorageReference getFirebasePhotoPath() {

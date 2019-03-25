@@ -38,4 +38,5 @@
     <string name="sign_in_button_text">Sign In</string>
     <string name="sign_in_with_google">Sign In with Google</string>
     <string name="sign_in_with_facebook">Sign In with Facebook</string>
+    <string name="delete_account">Delete Account</string>
 </resources>

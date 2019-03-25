@@ -53,10 +53,16 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_sign_out) {
-            viewModel.onSignOutClicked();
 
-            return true;
+        switch (item.getItemId()) {
+            case R.id.menu_sign_out:
+                viewModel.onSignOutClicked();
+                return true;
+
+            case R.id.menu_delete_account:
+                viewModel.onDeleteAccountClicked();
+                return true;
+
         }
 
         return super.onOptionsItemSelected(item);

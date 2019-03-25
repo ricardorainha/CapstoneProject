@@ -12,7 +12,7 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class LoginActivityViewModel extends ViewModel implements AuthManager.AuthStateChange {
+public class LoginActivityViewModel extends ViewModel implements AuthManager.LoginStateChange {
 
     private MutableLiveData<String> email = new MutableLiveData<>();
     private MutableLiveData<String> password = new MutableLiveData<>();

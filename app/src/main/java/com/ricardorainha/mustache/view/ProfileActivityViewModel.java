@@ -15,7 +15,7 @@ import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ProfileActivityViewModel extends ViewModel {
+public class ProfileActivityViewModel extends ViewModel implements AuthManager.UserStateChange {
 
     private MutableLiveData<User> user;
     private MutableLiveData<String> password = new MutableLiveData<>();
@@ -91,7 +91,15 @@ public class ProfileActivityViewModel extends ViewModel {
     }
 
     public void onSignOutClicked() {
-        AuthManager.getInstance().signOut();
+        AuthManager.getInstance().signOut(this);
+    }
+
+    public void onDeleteAccountClicked() {
+        AuthManager.getInstance().deleteAccount(this);
+    }
+
+    @Override
+    public void onUserSignOut() {
         mustFinish.set(true);
     }
 }

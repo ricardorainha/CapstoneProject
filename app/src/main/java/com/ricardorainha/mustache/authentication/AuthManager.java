@@ -78,7 +78,7 @@ public class AuthManager {
         return !(isUserLoggedIn() && (firebaseUser.isEmailVerified() || hasFacebookProvider));
     }
 
-    public void createUserWithEmailAndPassword(String email, String password, final AuthStateChange listener) {
+    public void createUserWithEmailAndPassword(String email, String password, final LoginStateChange listener) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -99,7 +99,7 @@ public class AuthManager {
             });
     }
 
-    public void signInWithEmailAndPassword(String email, String password, final AuthStateChange listener) {
+    public void signInWithEmailAndPassword(String email, String password, final LoginStateChange listener) {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -117,17 +117,31 @@ public class AuthManager {
                 });
     }
 
-    public void resetPassword(String email, AuthStateChange listener) {
+    public void resetPassword(String email, LoginStateChange listener) {
         auth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     listener.onResetPasswordFinished(task.isSuccessful());
                 });
     }
 
-    public interface AuthStateChange {
+    public void deleteAccount(UserStateChange listener) {
+        FirebaseUtils.deleteAccount();
+        auth.getCurrentUser().delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        signOut(listener);
+                    }
+                });
+    }
+
+    public interface LoginStateChange {
         void onUserCreateFinished(int resultCode, String message);
         void onUserSignInFinished(int resultCode, String message);
         void onResetPasswordFinished(boolean success);
+    }
+
+    public interface UserStateChange {
+        void onUserSignOut();
     }
 
     public void updatePassword(String password) {
@@ -142,13 +156,14 @@ public class AuthManager {
         }
     }
 
-    public void signOut() {
+    public void signOut(UserStateChange listener) {
         auth.signOut();
         LoginManager.getInstance().logOut();
         firebaseUser = auth.getCurrentUser();
+        listener.onUserSignOut();
     }
 
-    public void handleGoogleSignIn(Intent gsiData, AuthStateChange listener) {
+    public void handleGoogleSignIn(Intent gsiData, LoginStateChange listener) {
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(gsiData);
         GoogleSignInAccount googleAccount = null;
         try {
@@ -173,7 +188,7 @@ public class AuthManager {
         }
     }
 
-    public void handleFacebookSignIn(AccessToken token, AuthStateChange listener) {
+    public void handleFacebookSignIn(AccessToken token, LoginStateChange listener) {
         AuthCredential facebookCredential = FacebookAuthProvider.getCredential(token.getToken());
         auth.signInWithCredential(facebookCredential)
                 .addOnCompleteListener(task -> {
