@@ -39,4 +39,7 @@
     <string name="sign_in_with_google">Sign In with Google</string>
     <string name="sign_in_with_facebook">Sign In with Facebook</string>
     <string name="delete_account">Delete Account</string>
+    <string name="barbershops">Barbershops</string>
+    <string name="favorites">Favorites</string>
+    <string name="my_schedule">My Schedule</string>
 </resources>

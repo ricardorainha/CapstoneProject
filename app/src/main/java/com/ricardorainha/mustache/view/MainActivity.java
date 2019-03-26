@@ -6,18 +6,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.authentication.AuthManager;
 import com.ricardorainha.mustache.databinding.ActivityMainBinding;
 import com.ricardorainha.mustache.utils.SharedPrefUtils;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 import androidx.lifecycle.ViewModelProviders;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private ActivityMainBinding binding;
     private MainActivityViewModel viewModel;
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configureFields() {
+        binding.navigationBar.setOnNavigationItemSelectedListener(this);
 
     }
 
@@ -86,4 +89,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(profileIntent);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        // TODO: implement fragments
+
+        return true;
+    }
 }

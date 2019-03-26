@@ -36,6 +36,7 @@ dependencies {
         exclude group: "com.android.support"
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:4.40.0'
     implementation 'com.google.firebase:firebase-auth:16.2.0'
     implementation 'com.google.firebase:firebase-core:16.0.8'

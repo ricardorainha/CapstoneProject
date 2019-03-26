@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_barbershops"
+        android:title="@string/barbershops"
+        android:icon="@drawable/ic_bearded_man_black_24"/>
+
+    <item
+        android:id="@+id/navigation_favorites"
+        android:title="@string/favorites"
+        android:icon="@drawable/ic_favorite_black_24"/>
+
+    <item
+        android:id="@+id/navigation_my_schedule"
+        android:title="@string/my_schedule"
+        android:icon="@drawable/ic_calendar_black_24"/>
+
+</menu>
