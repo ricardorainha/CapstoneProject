@@ -11,15 +11,19 @@ import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.authentication.AuthManager;
 import com.ricardorainha.mustache.databinding.ActivityMainBinding;
 import com.ricardorainha.mustache.utils.SharedPrefUtils;
+import com.ricardorainha.mustache.view.fragments.BarbershopsFragment;
+import com.ricardorainha.mustache.view.fragments.FavoritesFragment;
+import com.ricardorainha.mustache.view.fragments.MyScheduleFragment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private MainActivityViewModel viewModel;
@@ -80,19 +84,36 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void configureFields() {
-        binding.navigationBar.setOnNavigationItemSelectedListener(this);
-
+        binding.navigationBar.setOnNavigationItemSelectedListener(navigationListener);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BarbershopsFragment()).commit();
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navigationListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+            Fragment activeFragment = null;
+
+            switch (menuItem.getItemId()) {
+                case R.id.navigation_barbershops:
+                    activeFragment = new BarbershopsFragment();
+                    break;
+                case R.id.navigation_favorites:
+                    activeFragment = new FavoritesFragment();
+                    break;
+                case R.id.navigation_my_schedule:
+                    activeFragment = new MyScheduleFragment();
+                    break;
+            }
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, activeFragment).commit();
+
+            return true;
+        }
+    };
 
     private void startProfileActivity() {
         Intent profileIntent = new Intent(this, ProfileActivity.class);
         startActivity(profileIntent);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        // TODO: implement fragments
-
-        return true;
     }
 }

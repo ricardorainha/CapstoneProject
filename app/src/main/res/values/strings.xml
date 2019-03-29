@@ -42,4 +42,9 @@
     <string name="barbershops">Barbershops</string>
     <string name="favorites">Favorites</string>
     <string name="my_schedule">My Schedule</string>
+
+    <array name="barbershops_tabs_titles">
+        <item>List</item>
+        <item>Map</item>
+    </array>
 </resources>
