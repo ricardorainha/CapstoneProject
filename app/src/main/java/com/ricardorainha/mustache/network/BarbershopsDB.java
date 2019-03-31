@@ -56,7 +56,7 @@ public class BarbershopsDB extends Observable {
         return barbershopsAPI;
     }
 
-    public void getPartners(double latitude, double longitude) {
+    public void getBarbershops(double latitude, double longitude) {
         if (barbershopsAPI != null) {
 
             if ((latitude != lastLatitude) && (longitude != lastLongitude)) {
@@ -74,11 +74,16 @@ public class BarbershopsDB extends Observable {
                             setChanged();
                             notifyObservers(bsResult);
                         }
+                        else {
+                            setChanged();
+                            notifyObservers();
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<BarbershopsResult> call, Throwable t) {
-
+                        setChanged();
+                        notifyObservers(t);
                     }
                 });
             }

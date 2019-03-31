@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Barbershops implements Parcelable
+public class Barbershop implements Parcelable
 {
 
     @SerializedName("formatted_address")
@@ -36,24 +36,24 @@ public class Barbershops implements Parcelable
     @SerializedName("user_ratings_total")
     @Expose
     private int userRatingsTotal;
-    public final static Parcelable.Creator<Barbershops> CREATOR = new Creator<Barbershops>() {
+    public final static Parcelable.Creator<Barbershop> CREATOR = new Creator<Barbershop>() {
 
 
         @SuppressWarnings({
                 "unchecked"
         })
-        public Barbershops createFromParcel(Parcel in) {
-            return new Barbershops(in);
+        public Barbershop createFromParcel(Parcel in) {
+            return new Barbershop(in);
         }
 
-        public Barbershops[] newArray(int size) {
-            return (new Barbershops[size]);
+        public Barbershop[] newArray(int size) {
+            return (new Barbershop[size]);
         }
 
     }
             ;
 
-    protected Barbershops(Parcel in) {
+    protected Barbershop(Parcel in) {
         this.formattedAddress = ((String) in.readValue((String.class.getClassLoader())));
         this.geometry = ((Geometry) in.readValue((Geometry.class.getClassLoader())));
         this.name = ((String) in.readValue((String.class.getClassLoader())));
@@ -64,10 +64,10 @@ public class Barbershops implements Parcelable
         this.userRatingsTotal = ((int) in.readValue((int.class.getClassLoader())));
     }
 
-    public Barbershops() {
+    public Barbershop() {
     }
 
-    public Barbershops(String formattedAddress, Geometry geometry, String name, OpeningHours openingHours, List<Photo> photos, String placeId, double rating, int userRatingsTotal) {
+    public Barbershop(String formattedAddress, Geometry geometry, String name, OpeningHours openingHours, List<Photo> photos, String placeId, double rating, int userRatingsTotal) {
         super();
         this.formattedAddress = formattedAddress;
         this.geometry = geometry;

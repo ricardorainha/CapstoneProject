@@ -11,9 +11,14 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ricardorainha.mustache.R;
+import com.ricardorainha.mustache.model.Barbershop;
+
+import java.util.List;
 
 import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
@@ -82,12 +87,32 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
                 if (mMap == null) {
                     return;
                 }
-
-                Location lastLocation = viewModel.getLastLocation().get();
-                LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                mMap.addMarker(new MarkerOptions().title("Your Location").position(latLng).snippet("This is your location"));
+                addMyLocationMarker();
             }
         });
+
+        viewModel.getBarbershops().observe(this, barbershops -> updateMap(barbershops));
+    }
+
+    private void updateMap(List<Barbershop> barbershops) {
+        mMap.clear();
+        addMyLocationMarker();
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_bearded_man_black_48);
+
+        for (Barbershop barbershop : barbershops) {
+            mMap.addMarker(
+                    new MarkerOptions()
+                    .title(barbershop.getName())
+                    .icon(icon)
+                    .position(new LatLng(barbershop.getGeometry().getLocation().getLat(), barbershop.getGeometry().getLocation().getLng()))
+            );
+        }
+    }
+
+    private void addMyLocationMarker() {
+        Location lastLocation = viewModel.getLastLocation().get();
+        LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        mMap.addMarker(new MarkerOptions().title("Your Location").position(latLng));
     }
 }

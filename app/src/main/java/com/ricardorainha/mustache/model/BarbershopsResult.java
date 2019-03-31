@@ -14,7 +14,7 @@ public class BarbershopsResult implements Parcelable
 
     @SerializedName("results")
     @Expose
-    private List<Barbershops> barbershops = new ArrayList<Barbershops>();
+    private List<Barbershop> barbershops = new ArrayList<Barbershop>();
 
     public final static Parcelable.Creator<BarbershopsResult> CREATOR = new Creator<BarbershopsResult>() {
 
@@ -34,22 +34,22 @@ public class BarbershopsResult implements Parcelable
             ;
 
     protected BarbershopsResult(Parcel in) {
-        in.readList(this.barbershops, (Barbershops.class.getClassLoader()));
+        in.readList(this.barbershops, (Barbershop.class.getClassLoader()));
     }
 
     public BarbershopsResult() {
     }
 
-    public BarbershopsResult(List<Barbershops> barbershops) {
+    public BarbershopsResult(List<Barbershop> barbershops) {
         super();
         this.barbershops = barbershops;
     }
 
-    public List<Barbershops> getBarbershops() {
+    public List<Barbershop> getBarbershops() {
         return barbershops;
     }
 
-    public void setBarbershops(List<Barbershops> barbershops) {
+    public void setBarbershops(List<Barbershop> barbershops) {
         this.barbershops = barbershops;
     }
 
