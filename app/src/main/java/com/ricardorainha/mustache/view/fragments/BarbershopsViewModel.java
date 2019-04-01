@@ -18,6 +18,7 @@ public class BarbershopsViewModel extends ViewModel implements Observer {
     private ObservableField<Location> lastLocation = new ObservableField<>();
     private ObservableField<Boolean> locationPermissionGranted = new ObservableField<>();
     private MutableLiveData<List<Barbershop>> barbershops = new MutableLiveData<>();
+    private ObservableField<Boolean> loading = new ObservableField<>();
     private Repository repository;
 
     public static Location DEFAULT_LOCATION = new Location("");
@@ -34,6 +35,7 @@ public class BarbershopsViewModel extends ViewModel implements Observer {
         lastLocation.addOnPropertyChangedCallback(new androidx.databinding.Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(androidx.databinding.Observable sender, int propertyId) {
+                loading.set(true);
                 requestBarbershops();
             }
         });
@@ -47,6 +49,10 @@ public class BarbershopsViewModel extends ViewModel implements Observer {
         return locationPermissionGranted;
     }
 
+    public ObservableField<Boolean> getLoading() {
+        return loading;
+    }
+
     public MutableLiveData<List<Barbershop>> getBarbershops() {
         return barbershops;
     }
@@ -54,6 +60,7 @@ public class BarbershopsViewModel extends ViewModel implements Observer {
     @Override
     public void update(Observable observable, Object response) {
         if (response instanceof List) {
+            loading.set(false);
             barbershops.setValue((List<Barbershop>) response);
         }
 

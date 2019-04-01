@@ -5,21 +5,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ricardorainha.mustache.R;
+import com.ricardorainha.mustache.databinding.FragmentBarbershopsMapBinding;
 import com.ricardorainha.mustache.model.Barbershop;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -29,6 +30,8 @@ import androidx.lifecycle.ViewModelProviders;
  */
 public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallback {
 
+    public static final String MAP_BUNDLE = "MapViewBundle";
+    private FragmentBarbershopsMapBinding binding;
     private BarbershopsViewModel viewModel;
     private GoogleMap mMap;
 
@@ -40,12 +43,34 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_barbershops_map, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_barbershops_map, container, false);
         viewModel = ViewModelProviders.of(this.getParentFragment()).get(BarbershopsViewModel.class);
+
+        configureFields();
         configureObservables();
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        return view;
+
+        Bundle mapBundle = null;
+        if (savedInstanceState != null) {
+            mapBundle = savedInstanceState.getBundle(MAP_BUNDLE);
+        }
+
+        binding.map.onCreate(mapBundle);
+        binding.map.getMapAsync(this);
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Bundle mapBundle = outState.getBundle(MAP_BUNDLE);
+        if (mapBundle == null) {
+            mapBundle = new Bundle();
+            outState.putBundle(MAP_BUNDLE, mapBundle);
+        }
+
+        binding.map.onSaveInstanceState(mapBundle);
     }
 
     @Override
@@ -55,10 +80,23 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
         mMap.setOnCameraMoveStartedListener(reason -> {
             if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 mMap.setOnCameraIdleListener(() -> {
-                    Toast.makeText(getContext(), "Camera: " + mMap.getCameraPosition(), Toast.LENGTH_SHORT).show();
+                    binding.searchAreaButton.setVisibility(View.VISIBLE);
                     mMap.setOnCameraIdleListener(null);
                 });
             }
+        });
+
+        mMap.moveCamera(CameraUpdateFactory.zoomBy(15));
+    }
+
+    private void configureFields() {
+        binding.searchAreaButton.setOnClickListener(v -> {
+            mMap.clear();
+            Location location = new Location("");
+            location.setLatitude(mMap.getCameraPosition().target.latitude);
+            location.setLongitude(mMap.getCameraPosition().target.longitude);
+            viewModel.getLastLocation().set(location);
+            binding.searchAreaButton.setVisibility(View.GONE);
         });
     }
 
@@ -87,7 +125,16 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
                 if (mMap == null) {
                     return;
                 }
-                addMyLocationMarker();
+                addReferenceMarker();
+            }
+        });
+
+        viewModel.getLoading().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                mMap.getUiSettings().setAllGesturesEnabled(!viewModel.getLoading().get());
+                binding.map.setClickable(!viewModel.getLoading().get());
+                binding.progressBar.setVisibility(viewModel.getLoading().get() ? View.VISIBLE : View.GONE);
             }
         });
 
@@ -96,7 +143,7 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
 
     private void updateMap(List<Barbershop> barbershops) {
         mMap.clear();
-        addMyLocationMarker();
+        addReferenceMarker();
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_bearded_man_black_48);
 
         for (Barbershop barbershop : barbershops) {
@@ -109,10 +156,46 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
         }
     }
 
-    private void addMyLocationMarker() {
+    private void addReferenceMarker() {
         Location lastLocation = viewModel.getLastLocation().get();
         LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-        mMap.addMarker(new MarkerOptions().title("Your Location").position(latLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.addMarker(new MarkerOptions().title(getString(R.string.reference)).position(latLng));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        binding.map.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        binding.map.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        binding.map.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        binding.map.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        binding.map.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        binding.map.onLowMemory();
     }
 }

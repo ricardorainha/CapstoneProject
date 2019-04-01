@@ -42,6 +42,8 @@
     <string name="barbershops">Barbershops</string>
     <string name="favorites">Favorites</string>
     <string name="my_schedule">My Schedule</string>
+    <string name="search_this_area">Search This Area</string>
+    <string name="reference">Reference</string>
 
     <array name="barbershops_tabs_titles">
         <item>List</item>
