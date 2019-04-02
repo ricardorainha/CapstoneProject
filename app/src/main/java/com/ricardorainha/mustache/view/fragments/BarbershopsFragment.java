@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.adapter.BarbershopsPagerAdapter;
 import com.ricardorainha.mustache.databinding.FragmentBarbershopsBinding;
+import com.ricardorainha.mustache.model.Session;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -71,7 +72,7 @@ public class BarbershopsFragment extends Fragment {
             Task<Location> locationResult = flpClient.getLastLocation();
             locationResult.addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    viewModel.getLastLocation().set(task.getResult());
+                    viewModel.getLastLocation().setValue(task.getResult());
                 } else {
                     setDefaultLocation();
                 }
@@ -83,12 +84,12 @@ public class BarbershopsFragment extends Fragment {
     }
 
     private void processPermissionGranted() {
-        viewModel.getLocationPermissionGranted().set(true);
+        viewModel.getLocationPermissionGranted().setValue(true);
         getCurrentLocation();
     }
 
     private void setDefaultLocation() {
-        viewModel.getLastLocation().set(viewModel.DEFAULT_LOCATION);
+        viewModel.getLastLocation().setValue(viewModel.DEFAULT_LOCATION);
     }
 
     private void getLocationPermission() {
@@ -96,10 +97,13 @@ public class BarbershopsFragment extends Fragment {
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             processPermissionGranted();
-        } else {
+        } else if (!Session.getInstance().hasAskedForPermissions()){
+            Session.getInstance().setAskedForPermissions(true);
             this.requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
-
+        else {
+            setDefaultLocation();
+        }
     }
 }

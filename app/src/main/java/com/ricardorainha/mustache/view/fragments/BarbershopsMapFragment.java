@@ -21,7 +21,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -47,7 +46,6 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
         viewModel = ViewModelProviders.of(this.getParentFragment()).get(BarbershopsViewModel.class);
 
         configureFields();
-        configureObservables();
 
         Bundle mapBundle = null;
         if (savedInstanceState != null) {
@@ -59,6 +57,8 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
 
         return binding.getRoot();
     }
+
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -86,7 +86,9 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
             }
         });
 
-        mMap.moveCamera(CameraUpdateFactory.zoomBy(15));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+
+        configureObservables();
     }
 
     private void configureFields() {
@@ -95,53 +97,51 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
             Location location = new Location("");
             location.setLatitude(mMap.getCameraPosition().target.latitude);
             location.setLongitude(mMap.getCameraPosition().target.longitude);
-            viewModel.getLastLocation().set(location);
+            viewModel.getLastLocation().setValue(location);
             binding.searchAreaButton.setVisibility(View.GONE);
         });
     }
 
     private void configureObservables() {
-        viewModel.getLocationPermissionGranted().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (mMap == null) {
-                    return;
-                }
+        viewModel.getLocationPermissionGranted().observe(this, permissionGranted -> {
+            if (mMap == null) {
+                return;
+            }
 
-                try {
-                    boolean granted = viewModel.getLocationPermissionGranted().get();
-                    mMap.setMyLocationEnabled(granted);
-                    mMap.getUiSettings().setMyLocationButtonEnabled(granted);
-                }
-                catch (SecurityException e) {
-                    e.printStackTrace();
-                }
+            try {
+                mMap.setMyLocationEnabled(permissionGranted);
+                mMap.getUiSettings().setMyLocationButtonEnabled(permissionGranted);
+            }
+            catch (SecurityException e) {
+                e.printStackTrace();
             }
         });
 
-        viewModel.getLastLocation().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (mMap == null) {
-                    return;
-                }
-                addReferenceMarker();
+        viewModel.getLastLocation().observe(this, location -> {
+            if (mMap == null) {
+                return;
             }
+            addReferenceMarker();
         });
 
-        viewModel.getLoading().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                mMap.getUiSettings().setAllGesturesEnabled(!viewModel.getLoading().get());
-                binding.map.setClickable(!viewModel.getLoading().get());
-                binding.progressBar.setVisibility(viewModel.getLoading().get() ? View.VISIBLE : View.GONE);
+        viewModel.getLoading().observe(this, loading -> {
+            if (mMap != null) {
+                mMap.getUiSettings().setAllGesturesEnabled(!loading);
             }
+            binding.map.setClickable(!loading);
+            binding.progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         });
 
-        viewModel.getBarbershops().observe(this, barbershops -> updateMap(barbershops));
+        viewModel.getBarbershops().observe(this, barbershops -> {
+            updateMap(barbershops);
+        });
     }
 
     private void updateMap(List<Barbershop> barbershops) {
+        if (mMap == null) {
+            return;
+        }
+
         mMap.clear();
         addReferenceMarker();
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_bearded_man_black_48);
@@ -157,7 +157,7 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
     }
 
     private void addReferenceMarker() {
-        Location lastLocation = viewModel.getLastLocation().get();
+        Location lastLocation = viewModel.getLastLocation().getValue();
         LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.addMarker(new MarkerOptions().title(getString(R.string.reference)).position(latLng));

@@ -9,7 +9,6 @@ import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.FragmentBarbershopsListBinding;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.Observable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -43,13 +42,7 @@ public class BarbershopsListFragment extends Fragment {
     }
 
     private void configureObservables() {
-        viewModel.getLoading().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                binding.pbLoading.setVisibility(viewModel.getLoading().get() ? View.VISIBLE : View.GONE);
-            }
-        });
-
+        viewModel.getLoading().observe(this, loading -> binding.pbLoading.setVisibility(viewModel.getLoading().getValue() ? View.VISIBLE : View.GONE));
         viewModel.getAdapter().observe(this, barbershops -> binding.rvBarbershops.setAdapter(viewModel.getAdapter().getValue()));
     }
 
