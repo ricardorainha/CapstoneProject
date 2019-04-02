@@ -2,6 +2,7 @@ package com.ricardorainha.mustache.view.fragments;
 
 import android.location.Location;
 
+import com.ricardorainha.mustache.adapter.BarbershopsAdapter;
 import com.ricardorainha.mustache.model.Barbershop;
 import com.ricardorainha.mustache.model.Repository;
 
@@ -18,6 +19,7 @@ public class BarbershopsViewModel extends ViewModel implements Observer {
     private ObservableField<Location> lastLocation = new ObservableField<>();
     private ObservableField<Boolean> locationPermissionGranted = new ObservableField<>();
     private MutableLiveData<List<Barbershop>> barbershops = new MutableLiveData<>();
+    private MutableLiveData<BarbershopsAdapter> adapter = new MutableLiveData<>();
     private ObservableField<Boolean> loading = new ObservableField<>();
     private Repository repository;
 
@@ -57,11 +59,16 @@ public class BarbershopsViewModel extends ViewModel implements Observer {
         return barbershops;
     }
 
+    public MutableLiveData<BarbershopsAdapter> getAdapter() {
+        return adapter;
+    }
+
     @Override
     public void update(Observable observable, Object response) {
         if (response instanceof List) {
             loading.set(false);
             barbershops.setValue((List<Barbershop>) response);
+            adapter.setValue(new BarbershopsAdapter(barbershops.getValue()));
         }
 
     }

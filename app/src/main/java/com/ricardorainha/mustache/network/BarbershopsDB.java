@@ -71,8 +71,7 @@ public class BarbershopsDB extends Observable {
                     public void onResponse(Call<BarbershopsResult> call, Response<BarbershopsResult> response) {
                         if (response.isSuccessful()) {
                             bsResult = response.body();
-                            setChanged();
-                            notifyObservers(bsResult);
+                            notifyBarbershopsObservers();
                         }
                         else {
                             setChanged();
@@ -87,7 +86,15 @@ public class BarbershopsDB extends Observable {
                     }
                 });
             }
+            else {
+                notifyBarbershopsObservers();
+            }
         }
+    }
+
+    private void notifyBarbershopsObservers() {
+        setChanged();
+        notifyObservers(bsResult);
     }
 
 }
