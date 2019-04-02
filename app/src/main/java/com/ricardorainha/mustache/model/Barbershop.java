@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.ricardorainha.mustache.network.BarbershopsDB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +118,20 @@ public class Barbershop implements Parcelable
 
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
+    }
+
+    public String getPhotoUrl() {
+        if (getPhotos().size() > 0) {
+            StringBuilder photoUrl = new StringBuilder()
+                    .append(BarbershopsDB.API_BASE_URL).append("place/photo?")
+                    .append("key=").append(BarbershopsDB.MAPS_API_KEY)
+                    .append("&photoreference=").append(getPhotos().get(0).getPhotoReference())
+                    .append("&maxwidth=1080");
+
+            return photoUrl.toString();
+        }
+
+        return null;
     }
 
     public String getPlaceId() {

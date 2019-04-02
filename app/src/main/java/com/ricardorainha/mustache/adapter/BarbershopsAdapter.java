@@ -3,6 +3,7 @@ package com.ricardorainha.mustache.adapter;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.BarbershopsListItemBinding;
 import com.ricardorainha.mustache.model.Barbershop;
@@ -55,6 +56,9 @@ public class BarbershopsAdapter extends RecyclerView.Adapter<BarbershopsAdapter.
         }
 
         public void bind(Barbershop barbershop) {
+            if (barbershop.getPhotos() != null && barbershop.getPhotos().size() > 0) {
+                Glide.with(binding.getRoot().getContext()).load(barbershop.getPhotoUrl()).into(binding.ivPhoto);
+            }
             binding.tvName.setText(barbershop.getName());
             binding.tvRating.setText(String.valueOf(barbershop.getRating()));
             binding.tvAddress.setText(barbershop.getFormattedAddress());
