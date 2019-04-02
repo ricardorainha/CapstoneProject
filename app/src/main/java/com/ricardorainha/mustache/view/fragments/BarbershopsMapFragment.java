@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProviders;
 public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallback {
 
     public static final String MAP_BUNDLE = "MapViewBundle";
+    private static final int DEFAULT_ZOOM_LEVEL = 15;
     private FragmentBarbershopsMapBinding binding;
     private BarbershopsViewModel viewModel;
     private GoogleMap mMap;
@@ -86,7 +87,7 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
             }
         });
 
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM_LEVEL));
 
         configureObservables();
     }
@@ -132,9 +133,7 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
             binding.progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         });
 
-        viewModel.getBarbershops().observe(this, barbershops -> {
-            updateMap(barbershops);
-        });
+        viewModel.getBarbershops().observe(this, barbershops -> updateMap(barbershops));
     }
 
     private void updateMap(List<Barbershop> barbershops) {
