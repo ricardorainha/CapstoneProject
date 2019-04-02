@@ -44,7 +44,8 @@ public class FirebaseUtils {
         });
     }
 
-    public static void updateUserInfo(User user) {
+    public static void updateUserInfo() {
+        User user = Session.getInstance().getUser().getValue();
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(USERS_DATABASE_REFERENCE).child(user.getUid());
         userReference.updateChildren(user.toMap(), (databaseError, databaseReference) -> Log.d(TAG, "User with UID " + user.getUid() + " updated on RealtimeDatabase"));
     }
@@ -53,7 +54,7 @@ public class FirebaseUtils {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userReference = database.getReference(USERS_DATABASE_REFERENCE).child(uid);
 
-        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        userReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);

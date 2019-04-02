@@ -80,17 +80,17 @@
 
             <Button
                 android:id="@+id/btn_details"
-                style="@style/BorderlessCardViewButton"
+                style="@style/CardViewTextButton"
                 android:text="@string/details"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_address" />
 
             <Button
                 android:id="@+id/btn_favorites"
-                style="@style/BorderlessCardViewButton"
-                android:text="@string/add_to_favorites"
+                style="@style/CardViewTextButton"
                 app:layout_constraintStart_toEndOf="@+id/btn_details"
-                app:layout_constraintTop_toBottomOf="@+id/tv_address" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_address"
+                tools:text="@string/add_to_favorites"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

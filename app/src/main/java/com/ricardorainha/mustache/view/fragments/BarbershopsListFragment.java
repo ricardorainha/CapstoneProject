@@ -42,8 +42,8 @@ public class BarbershopsListFragment extends Fragment {
     }
 
     private void configureObservables() {
-        viewModel.getLoading().observe(this, loading -> binding.pbLoading.setVisibility(viewModel.getLoading().getValue() ? View.VISIBLE : View.GONE));
-        viewModel.getAdapter().observe(this, barbershops -> binding.rvBarbershops.setAdapter(viewModel.getAdapter().getValue()));
+        viewModel.getLoading().observe(this, loading -> binding.pbLoading.setVisibility(loading ? View.VISIBLE : View.GONE));
+        viewModel.getAdapter().observe(this, adapter -> binding.rvBarbershops.setAdapter(adapter));
     }
 
 }

@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.BarbershopsListItemBinding;
 import com.ricardorainha.mustache.model.Barbershop;
+import com.ricardorainha.mustache.utils.FavoritesUtils;
 
 import java.util.List;
 
@@ -18,9 +19,11 @@ public class BarbershopsAdapter extends RecyclerView.Adapter<BarbershopsAdapter.
 
     private BarbershopsListItemBinding binding;
     private List<Barbershop> barbershops;
+    private ActionCallback callback;
 
-    public BarbershopsAdapter(List<Barbershop> barbershops) {
+    public BarbershopsAdapter(List<Barbershop> barbershops, ActionCallback callback) {
         this.barbershops = barbershops;
+        this.callback = callback;
     }
 
     @NonNull
@@ -62,8 +65,32 @@ public class BarbershopsAdapter extends RecyclerView.Adapter<BarbershopsAdapter.
             binding.tvName.setText(barbershop.getName());
             binding.tvRating.setText(String.valueOf(barbershop.getRating()));
             binding.tvAddress.setText(barbershop.getFormattedAddress());
+            binding.btnDetails.setOnClickListener(v -> callback.onDetailsClicked(barbershop));
+            checkFavoritesButtonText(barbershop);
+            binding.btnFavorites.setOnClickListener(v -> {
+                if (FavoritesUtils.isFavorite(barbershop)) {
+                    FavoritesUtils.removeFavorite(barbershop);
+                }
+                else {
+                    FavoritesUtils.addFavorite(barbershop);
+                }
+                checkFavoritesButtonText(barbershop);
+            });
             binding.executePendingBindings();
         }
 
+        private void checkFavoritesButtonText(Barbershop barbershop) {
+            if (FavoritesUtils.isFavorite(barbershop)) {
+                binding.btnFavorites.setText(binding.getRoot().getContext().getString(R.string.remove_from_favorites));
+            }
+            else {
+                binding.btnFavorites.setText(binding.getRoot().getContext().getString(R.string.add_to_favorites));
+            }
+        }
+
+    }
+
+    public interface ActionCallback {
+        void onDetailsClicked(Barbershop barbershop);
     }
 }

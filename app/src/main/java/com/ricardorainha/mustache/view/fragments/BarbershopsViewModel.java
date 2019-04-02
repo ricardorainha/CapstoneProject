@@ -13,7 +13,7 @@ import java.util.Observer;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class BarbershopsViewModel extends ViewModel implements Observer {
+public class BarbershopsViewModel extends ViewModel implements Observer, BarbershopsAdapter.ActionCallback {
 
     private MutableLiveData<Location> lastLocation = new MutableLiveData<>();
     private MutableLiveData<Boolean> locationPermissionGranted = new MutableLiveData<>();
@@ -64,12 +64,17 @@ public class BarbershopsViewModel extends ViewModel implements Observer {
         if (response instanceof List) {
             loading.setValue(false);
             barbershops.setValue((List<Barbershop>) response);
-            adapter.setValue(new BarbershopsAdapter(barbershops.getValue()));
+            adapter.setValue(new BarbershopsAdapter(barbershops.getValue(), this));
         }
 
     }
 
     private void requestBarbershops() {
         repository.requestBarbershops(lastLocation.getValue().getLatitude(), lastLocation.getValue().getLongitude());
+    }
+
+    @Override
+    public void onDetailsClicked(Barbershop barbershop) {
+
     }
 }

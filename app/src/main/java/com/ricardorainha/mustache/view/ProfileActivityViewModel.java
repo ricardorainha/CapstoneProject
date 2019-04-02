@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModel;
 
 public class ProfileActivityViewModel extends ViewModel implements AuthManager.UserStateChange {
 
-    private MutableLiveData<User> user;
     private MutableLiveData<String> password = new MutableLiveData<>();
     private MutableLiveData<String> passwordConfirmation = new MutableLiveData<>();
     private ObservableField<StorageReference> userPhotoReference = new ObservableField<>();
@@ -26,10 +25,9 @@ public class ProfileActivityViewModel extends ViewModel implements AuthManager.U
 
 
     public ProfileActivityViewModel() {
-        user = Session.getInstance().getUser();
         mustFinish.set(false);
 
-        if (user.getValue() != null) {
+        if (Session.getInstance().getUser().getValue() != null) {
             StorageReference photoReference = Session.getInstance().getUser().getValue().getPhotoReference();
             if (photoReference != null) {
                 userPhotoReference.set(photoReference);
@@ -38,7 +36,7 @@ public class ProfileActivityViewModel extends ViewModel implements AuthManager.U
     }
 
     public MutableLiveData<User> getUser() {
-        return user;
+        return Session.getInstance().getUser();
     }
 
     public MutableLiveData<String> getPassword() {
@@ -80,7 +78,7 @@ public class ProfileActivityViewModel extends ViewModel implements AuthManager.U
 
             }
         }
-        FirebaseUtils.updateUserInfo(user.getValue());
+        FirebaseUtils.updateUserInfo();
 
         if (userPhotoBitmap.get() != null) {
             FirebaseUtils.updateUserPhoto(userPhotoBitmap.get());

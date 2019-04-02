@@ -16,6 +16,7 @@ public class User {
     private String name;
     private String email;
     private String phone;
+    private HashMap<String, Barbershop> favorites = new HashMap<>();
 
     public User() { }
 
@@ -24,6 +25,14 @@ public class User {
         this.name = name;
         this.email = email;
         this.phone = phone;
+    }
+
+    public User(String uid, String name, String email, String phone, HashMap<String, Barbershop> favorites) {
+        this.uid = uid;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.favorites = favorites;
     }
 
     public String getUid() {
@@ -58,6 +67,28 @@ public class User {
         this.phone = phone;
     }
 
+    public HashMap<String, Barbershop> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(HashMap<String, Barbershop> favorites) {
+        this.favorites = favorites;
+    }
+
+    @Exclude
+    public void addFavorite(Barbershop barbershop) {
+        if (this.favorites != null && !this.favorites.containsKey(barbershop.getPlaceId())) {
+            this.favorites.put(barbershop.getPlaceId(), barbershop);
+        }
+    }
+
+    @Exclude
+    public void removeFavorite(Barbershop barbershop) {
+        if (this.favorites != null && this.favorites.containsKey(barbershop.getPlaceId())) {
+            this.favorites.remove(barbershop.getPlaceId());
+        }
+    }
+
     @Exclude
     public StorageReference getPhotoReference() {
         return FirebaseUtils.getProfilePhotoPath(getUid());
@@ -76,6 +107,7 @@ public class User {
         hashMap.put("name", name);
         hashMap.put("email", email);
         hashMap.put("phone", phone);
+        hashMap.put("favorites", favorites);
 
         return hashMap;
     }
