@@ -95,7 +95,7 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
             binding.ivWebsite.setVisibility(TextUtils.isEmpty(barbershop.getWebsite()) ? View.GONE : View.VISIBLE);
             binding.tvDetailsWebsite.setVisibility(TextUtils.isEmpty(barbershop.getWebsite()) ? View.GONE : View.VISIBLE);
 
-            boolean hasOpeningHours = !barbershop.getOpeningHours().getWeekdayText().isEmpty();
+            boolean hasOpeningHours = (barbershop.getOpeningHours() != null) && (!barbershop.getOpeningHours().getWeekdayText().isEmpty());
             binding.ivOpenHours.setVisibility(hasOpeningHours ? View.VISIBLE : View.GONE);
             binding.tvDetailsOpenHours.setVisibility(hasOpeningHours ? View.VISIBLE : View.GONE);
 

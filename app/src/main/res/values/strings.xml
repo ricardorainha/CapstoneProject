@@ -49,6 +49,8 @@
     <string name="remove_from_favorites">Remove From Favorites</string>
     <string name="no_favorites">You don\'t have any\nfavorite barbershop.</string>
     <string name="user_ratings_total">(%s users)</string>
+    <string name="map_add_to_favorites">%s added to favorites.</string>
+    <string name="map_already_on_favorites">%s is already a favorite.</string>
 
     <array name="barbershops_tabs_titles">
         <item>List</item>

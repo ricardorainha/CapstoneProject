@@ -1,10 +1,12 @@
 package com.ricardorainha.mustache.view.fragments;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +18,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.FragmentBarbershopsMapBinding;
 import com.ricardorainha.mustache.model.Barbershop;
+import com.ricardorainha.mustache.utils.FavoritesUtils;
+import com.ricardorainha.mustache.view.BarbershopDetailsActivity;
 
 import java.util.List;
 
@@ -87,6 +91,26 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
             }
         });
 
+        mMap.setOnInfoWindowClickListener(marker -> {
+            Barbershop barbershop = (Barbershop) marker.getTag();
+            if (barbershop != null) {
+                showDetails(barbershop);
+            }
+        });
+
+        mMap.setOnInfoWindowLongClickListener(marker -> {
+            Barbershop barbershop = (Barbershop) marker.getTag();
+            if (barbershop != null) {
+                if (!FavoritesUtils.isFavorite(barbershop)) {
+                    FavoritesUtils.addFavorite(barbershop);
+                    Toast.makeText(getContext(), getString(R.string.map_add_to_favorites, barbershop.getName()), Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getContext(), getString(R.string.map_already_on_favorites, barbershop.getName()), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         mMap.moveCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM_LEVEL));
 
         configureObservables();
@@ -149,9 +173,10 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
             mMap.addMarker(
                     new MarkerOptions()
                     .title(barbershop.getName())
+                    .snippet(barbershop.getFormattedAddress())
                     .icon(icon)
                     .position(new LatLng(barbershop.getGeometry().getLocation().getLat(), barbershop.getGeometry().getLocation().getLng()))
-            );
+            ).setTag(barbershop);
         }
     }
 
@@ -160,6 +185,12 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
         LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.addMarker(new MarkerOptions().title(getString(R.string.reference)).position(latLng));
+    }
+
+    private void showDetails(Barbershop barbershop) {
+        Intent detailsIntent = new Intent(this.getContext(), BarbershopDetailsActivity.class);
+        detailsIntent.putExtra(BarbershopDetailsActivity.BARBERSHOP_KEY, barbershop);
+        startActivity(detailsIntent);
     }
 
     @Override
