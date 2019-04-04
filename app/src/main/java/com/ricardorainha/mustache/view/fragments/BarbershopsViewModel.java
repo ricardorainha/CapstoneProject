@@ -2,8 +2,10 @@ package com.ricardorainha.mustache.view.fragments;
 
 import android.location.Location;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.ricardorainha.mustache.adapter.BarbershopsAdapter;
 import com.ricardorainha.mustache.model.Barbershop;
+import com.ricardorainha.mustache.model.LocationInfo;
 import com.ricardorainha.mustache.model.Repository;
 
 import java.util.List;
@@ -15,7 +17,6 @@ import androidx.lifecycle.ViewModel;
 
 public class BarbershopsViewModel extends ViewModel implements Observer, BarbershopsAdapter.ActionCallback {
 
-    private MutableLiveData<Location> lastLocation = new MutableLiveData<>();
     private MutableLiveData<Boolean> locationPermissionGranted = new MutableLiveData<>();
     private MutableLiveData<List<Barbershop>> barbershops = new MutableLiveData<>();
     private MutableLiveData<BarbershopsAdapter> adapter = new MutableLiveData<>();
@@ -23,25 +24,20 @@ public class BarbershopsViewModel extends ViewModel implements Observer, Barbers
     private MutableLiveData<Barbershop> selectedBarbershop = new MutableLiveData<>();
     private Repository repository;
 
-    public static Location DEFAULT_LOCATION = new Location("");
-    static {
-        DEFAULT_LOCATION.setLatitude(-23.612930);
-        DEFAULT_LOCATION.setLongitude(-46.698747);
-    }
 
     public BarbershopsViewModel() {
         repository = Repository.getInstance();
         repository.addObserver(this);
 
         locationPermissionGranted.setValue(false);
-        lastLocation.observeForever(location -> {
+        LocationInfo.getInstance().getLastLocation().observeForever(location -> {
             loading.setValue(true);
             requestBarbershops();
         });
     }
 
     public MutableLiveData<Location> getLastLocation() {
-        return lastLocation;
+        return LocationInfo.getInstance().getLastLocation();
     }
 
     public MutableLiveData<Boolean> getLocationPermissionGranted() {
@@ -74,8 +70,17 @@ public class BarbershopsViewModel extends ViewModel implements Observer, Barbers
 
     }
 
+    public void onPermissionGranted(FusedLocationProviderClient flpClient) {
+        getLocationPermissionGranted().setValue(true);
+        LocationInfo.getInstance().getCurrentLocation(flpClient);
+    }
+
+    public void onPermissionDenied() {
+        LocationInfo.getInstance().setDefaultLocation();
+    }
+
     private void requestBarbershops() {
-        repository.requestBarbershops(lastLocation.getValue().getLatitude(), lastLocation.getValue().getLongitude());
+        repository.requestBarbershops(getLastLocation().getValue().getLatitude(), getLastLocation().getValue().getLongitude());
     }
 
     @Override

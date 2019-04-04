@@ -9,6 +9,7 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.ActivityBarbershopDetailsBinding;
+import com.ricardorainha.mustache.model.LocationInfo;
 import com.ricardorainha.mustache.utils.FavoritesUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -111,5 +112,8 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
         });
     }
 
+    public void onDirectionsClicked(View view) {
+        startActivity(LocationInfo.getInstance().getDirectionsIntent(viewModel.getBarbershop().getValue()));
+    }
 
 }
