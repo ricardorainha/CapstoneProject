@@ -82,7 +82,12 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
     private void configureObservables() {
         viewModel.getBarbershop().observe(this, barbershop -> {
             if (binding.ivDetailsPhoto.getDrawable() == null) {
-                Glide.with(BarbershopDetailsActivity.this).load(barbershop.getPhotoUrl()).into(binding.ivDetailsPhoto);
+                if (barbershop.getPhotos().size() > 0) {
+                    Glide.with(BarbershopDetailsActivity.this).load(barbershop.getPhotoUrl()).into(binding.ivDetailsPhoto);
+                }
+                else {
+                    Glide.with(BarbershopDetailsActivity.this).load(R.drawable.mustache_black_background).into(binding.ivDetailsPhoto);
+                }
             }
             binding.ivPhone.setVisibility(TextUtils.isEmpty(barbershop.getFormattedPhoneNumber()) ? View.GONE : View.VISIBLE);
             binding.tvDetailsPhone.setVisibility(TextUtils.isEmpty(barbershop.getFormattedPhoneNumber()) ? View.GONE : View.VISIBLE);

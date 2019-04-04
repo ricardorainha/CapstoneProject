@@ -59,8 +59,13 @@ public class BarbershopsAdapter extends RecyclerView.Adapter<BarbershopsAdapter.
         }
 
         public void bind(Barbershop barbershop) {
-            if (barbershop.getPhotos() != null && barbershop.getPhotos().size() > 0) {
-                Glide.with(binding.getRoot().getContext()).load(barbershop.getPhotoUrl()).into(binding.ivPhoto);
+            if (barbershop.getPhotos() != null) {
+                if (barbershop.getPhotos().size() > 0) {
+                    Glide.with(binding.getRoot().getContext()).load(barbershop.getPhotoUrl()).into(binding.ivPhoto);
+                }
+                else {
+                    Glide.with(binding.getRoot().getContext()).load(R.drawable.mustache_black_background).into(binding.ivPhoto);
+                }
             }
             binding.tvName.setText(barbershop.getName());
             binding.tvRating.setText(String.valueOf(barbershop.getRating()));
