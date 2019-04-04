@@ -1,5 +1,7 @@
 package com.ricardorainha.mustache.view;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -119,6 +121,31 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
 
     public void onDirectionsClicked(View view) {
         startActivity(LocationInfo.getInstance().getDirectionsIntent(viewModel.getBarbershop().getValue()));
+    }
+
+    public void onAddressClicked(View view) {
+        Intent openAddressIntent = new Intent();
+        openAddressIntent.setAction(Intent.ACTION_VIEW);
+        openAddressIntent.setData(Uri.parse(viewModel.getBarbershop().getValue().getUrl()));
+
+        startActivity(openAddressIntent);
+    }
+
+    public void onPhoneClicked(View view) {
+        Intent openDialerIntent = new Intent();
+        openDialerIntent.setAction(Intent.ACTION_DIAL);
+        openDialerIntent.setData(Uri.parse("tel:" + viewModel.getBarbershop().getValue().getFormattedPhoneNumber()));
+
+        startActivity(openDialerIntent);
+    }
+
+    public void onWebsiteClicked(View view) {
+        Intent openWebsiteIntent = new Intent();
+        openWebsiteIntent.setAction(Intent.ACTION_VIEW);
+        openWebsiteIntent.setData(Uri.parse(viewModel.getBarbershop().getValue().getWebsite()));
+
+        startActivity(openWebsiteIntent);
+
     }
 
 }
