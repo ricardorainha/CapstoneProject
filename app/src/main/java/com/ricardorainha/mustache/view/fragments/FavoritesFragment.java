@@ -1,5 +1,6 @@
 package com.ricardorainha.mustache.view.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.FragmentFavoritesBinding;
+import com.ricardorainha.mustache.model.Barbershop;
+import com.ricardorainha.mustache.view.BarbershopDetailsActivity;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -45,6 +48,20 @@ public class FavoritesFragment extends Fragment {
             binding.rvFavorites.setVisibility(adapter.getItemCount() > 0 ? View.VISIBLE : View.GONE);
             binding.tvNoFavorites.setVisibility(adapter.getItemCount() > 0 ? View.GONE: View.VISIBLE);
         });
+
+        viewModel.getSelectedBarbershop().observe(this, barbershop -> {
+            if (barbershop != null) {
+                showDetails(barbershop);
+            }
+        });
+    }
+
+    private void showDetails(Barbershop barbershop) {
+        Intent detailsIntent = new Intent(this.getContext(), BarbershopDetailsActivity.class);
+        detailsIntent.putExtra(BarbershopDetailsActivity.BARBERSHOP_KEY, barbershop);
+        startActivity(detailsIntent);
+
+        viewModel.getSelectedBarbershop().setValue(null);
     }
 
 }

@@ -68,19 +68,24 @@ public class BarbershopsAdapter extends RecyclerView.Adapter<BarbershopsAdapter.
             binding.btnDetails.setOnClickListener(v -> callback.onDetailsClicked(barbershop));
             checkFavoritesButtonText(barbershop);
             binding.btnFavorites.setOnClickListener(v -> {
-                if (FavoritesUtils.isFavorite(barbershop)) {
-                    FavoritesUtils.removeFavorite(barbershop);
+                boolean isFavorite = FavoritesUtils.isFavorite(barbershop);
+                if (isFavorite) {
+                    FavoritesUtils.removeFavorite(barbershop.getPlaceId());
                 }
                 else {
                     FavoritesUtils.addFavorite(barbershop);
                 }
-                checkFavoritesButtonText(barbershop);
+                changeFavoritesButtonText(!isFavorite);
             });
             binding.executePendingBindings();
         }
 
         private void checkFavoritesButtonText(Barbershop barbershop) {
-            if (FavoritesUtils.isFavorite(barbershop)) {
+            changeFavoritesButtonText(FavoritesUtils.isFavorite(barbershop));
+        }
+
+        private void changeFavoritesButtonText(boolean isFavorite) {
+            if (isFavorite) {
                 binding.btnFavorites.setText(binding.getRoot().getContext().getString(R.string.remove_from_favorites));
             }
             else {

@@ -1,5 +1,6 @@
 package com.ricardorainha.mustache.view.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.FragmentBarbershopsListBinding;
+import com.ricardorainha.mustache.model.Barbershop;
+import com.ricardorainha.mustache.view.BarbershopDetailsActivity;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -21,7 +24,6 @@ public class BarbershopsListFragment extends Fragment {
     public BarbershopsListFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +46,19 @@ public class BarbershopsListFragment extends Fragment {
     private void configureObservables() {
         viewModel.getLoading().observe(this, loading -> binding.pbLoading.setVisibility(loading ? View.VISIBLE : View.GONE));
         viewModel.getAdapter().observe(this, adapter -> binding.rvBarbershops.setAdapter(adapter));
+        viewModel.getSelectedBarbershop().observe(this, barbershop -> {
+            if (barbershop != null) {
+                showDetails(barbershop);
+            }
+        });
+    }
+
+    private void showDetails(Barbershop barbershop) {
+        Intent detailsIntent = new Intent(this.getContext(), BarbershopDetailsActivity.class);
+        detailsIntent.putExtra(BarbershopDetailsActivity.BARBERSHOP_KEY, barbershop);
+        startActivity(detailsIntent);
+
+        viewModel.getSelectedBarbershop().setValue(null);
     }
 
 }

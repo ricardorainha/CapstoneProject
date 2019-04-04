@@ -83,9 +83,9 @@ public class User {
     }
 
     @Exclude
-    public void removeFavorite(Barbershop barbershop) {
-        if (this.favorites != null && this.favorites.containsKey(barbershop.getPlaceId())) {
-            this.favorites.remove(barbershop.getPlaceId());
+    public void removeFavorite(String placeId) {
+        if (this.favorites != null && this.favorites.containsKey(placeId)) {
+            this.favorites.remove(placeId);
         }
     }
 

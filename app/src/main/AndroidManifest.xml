@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ricardorainha.mustache">
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -16,15 +17,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppMaterialTheme">
         <activity
-            android:name=".view.ProfileActivity"
-            android:parentActivityName=".view.MainActivity"
+            android:name=".view.BarbershopDetailsActivity"
+            android:label="@string/details"
             android:launchMode="singleTask"
-            android:label="@string/profile" />
+            android:parentActivityName=".view.MainActivity" />
+        <activity
+            android:name=".view.ProfileActivity"
+            android:label="@string/profile"
+            android:launchMode="singleTask"
+            android:parentActivityName=".view.MainActivity" />
         <activity
             android:name=".view.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/title_activity_login"
             android:launchMode="singleTask"
-            android:label="@string/title_activity_login" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -60,8 +66,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/facebook_login_protocol_scheme" />
             </intent-filter>
         </activity>

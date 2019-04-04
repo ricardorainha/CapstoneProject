@@ -16,9 +16,15 @@ public class Barbershop implements Parcelable
     @SerializedName("formatted_address")
     @Expose
     private String formattedAddress;
+    @SerializedName("formatted_phone_number")
+    @Expose
+    private String formattedPhoneNumber;
     @SerializedName("geometry")
     @Expose
     private Geometry geometry;
+    @SerializedName("international_phone_number")
+    @Expose
+    private String internationalPhoneNumber;
     @SerializedName("name")
     @Expose
     private String name;
@@ -31,12 +37,18 @@ public class Barbershop implements Parcelable
     @SerializedName("place_id")
     @Expose
     private String placeId;
-    @SerializedName("rating")
+    @SerializedName("url")
     @Expose
-    private double rating;
+    private String url;
     @SerializedName("user_ratings_total")
     @Expose
     private int userRatingsTotal;
+    @SerializedName("website")
+    @Expose
+    private String website;
+    @SerializedName("rating")
+    @Expose
+    private double rating;
     public final static Parcelable.Creator<Barbershop> CREATOR = new Creator<Barbershop>() {
 
 
@@ -56,28 +68,36 @@ public class Barbershop implements Parcelable
 
     protected Barbershop(Parcel in) {
         this.formattedAddress = ((String) in.readValue((String.class.getClassLoader())));
+        this.formattedPhoneNumber = ((String) in.readValue((String.class.getClassLoader())));
         this.geometry = ((Geometry) in.readValue((Geometry.class.getClassLoader())));
+        this.internationalPhoneNumber = ((String) in.readValue((String.class.getClassLoader())));
         this.name = ((String) in.readValue((String.class.getClassLoader())));
         this.openingHours = ((OpeningHours) in.readValue((OpeningHours.class.getClassLoader())));
         in.readList(this.photos, (com.ricardorainha.mustache.model.Photo.class.getClassLoader()));
         this.placeId = ((String) in.readValue((String.class.getClassLoader())));
+        this.url = ((String) in.readValue((String.class.getClassLoader())));
+        this.userRatingsTotal = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.website = ((String) in.readValue((String.class.getClassLoader())));
         this.rating = ((double) in.readValue((double.class.getClassLoader())));
-        this.userRatingsTotal = ((int) in.readValue((int.class.getClassLoader())));
     }
 
     public Barbershop() {
     }
 
-    public Barbershop(String formattedAddress, Geometry geometry, String name, OpeningHours openingHours, List<Photo> photos, String placeId, double rating, int userRatingsTotal) {
+    public Barbershop(String formattedAddress, String formattedPhoneNumber, Geometry geometry, String internationalPhoneNumber, String name, OpeningHours openingHours, List<Photo> photos, String placeId, String url, Integer userRatingsTotal, String website, double rating) {
         super();
         this.formattedAddress = formattedAddress;
+        this.formattedPhoneNumber = formattedPhoneNumber;
         this.geometry = geometry;
+        this.internationalPhoneNumber = internationalPhoneNumber;
         this.name = name;
         this.openingHours = openingHours;
         this.photos = photos;
         this.placeId = placeId;
-        this.rating = rating;
+        this.url = url;
         this.userRatingsTotal = userRatingsTotal;
+        this.website = website;
+        this.rating = rating;
     }
 
     public String getFormattedAddress() {
@@ -88,12 +108,28 @@ public class Barbershop implements Parcelable
         this.formattedAddress = formattedAddress;
     }
 
+    public String getFormattedPhoneNumber() {
+        return formattedPhoneNumber;
+    }
+
+    public void setFormattedPhoneNumber(String formattedPhoneNumber) {
+        this.formattedPhoneNumber = formattedPhoneNumber;
+    }
+
     public Geometry getGeometry() {
         return geometry;
     }
 
     public void setGeometry(Geometry geometry) {
         this.geometry = geometry;
+    }
+
+    public String getInternationalPhoneNumber() {
+        return internationalPhoneNumber;
+    }
+
+    public void setInternationalPhoneNumber(String internationalPhoneNumber) {
+        this.internationalPhoneNumber = internationalPhoneNumber;
     }
 
     public String getName() {
@@ -142,12 +178,12 @@ public class Barbershop implements Parcelable
         this.placeId = placeId;
     }
 
-    public double getRating() {
-        return rating;
+    public String getUrl() {
+        return url;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getUserRatingsTotal() {
@@ -158,15 +194,39 @@ public class Barbershop implements Parcelable
         this.userRatingsTotal = userRatingsTotal;
     }
 
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public String getRatingText() {
+        return String.valueOf(getRating());
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(formattedAddress);
+        dest.writeValue(formattedPhoneNumber);
         dest.writeValue(geometry);
+        dest.writeValue(internationalPhoneNumber);
         dest.writeValue(name);
         dest.writeValue(openingHours);
         dest.writeList(photos);
         dest.writeValue(placeId);
-        dest.writeValue(rating);
+        dest.writeValue(url);
         dest.writeValue(userRatingsTotal);
+        dest.writeValue(website);
+        dest.writeValue(rating);
     }
 
     public int describeContents() {

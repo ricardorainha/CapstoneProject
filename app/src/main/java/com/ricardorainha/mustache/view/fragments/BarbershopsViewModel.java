@@ -20,6 +20,7 @@ public class BarbershopsViewModel extends ViewModel implements Observer, Barbers
     private MutableLiveData<List<Barbershop>> barbershops = new MutableLiveData<>();
     private MutableLiveData<BarbershopsAdapter> adapter = new MutableLiveData<>();
     private MutableLiveData<Boolean> loading = new MutableLiveData<>();
+    private MutableLiveData<Barbershop> selectedBarbershop = new MutableLiveData<>();
     private Repository repository;
 
     public static Location DEFAULT_LOCATION = new Location("");
@@ -59,6 +60,10 @@ public class BarbershopsViewModel extends ViewModel implements Observer, Barbers
         return adapter;
     }
 
+    public MutableLiveData<Barbershop> getSelectedBarbershop() {
+        return selectedBarbershop;
+    }
+
     @Override
     public void update(Observable observable, Object response) {
         if (response instanceof List) {
@@ -75,6 +80,6 @@ public class BarbershopsViewModel extends ViewModel implements Observer, Barbers
 
     @Override
     public void onDetailsClicked(Barbershop barbershop) {
-
+        this.selectedBarbershop.setValue(barbershop);
     }
 }

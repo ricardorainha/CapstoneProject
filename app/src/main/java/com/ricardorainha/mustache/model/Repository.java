@@ -27,12 +27,21 @@ public class Repository extends Observable implements Observer {
         requester.getBarbershops(latitude, longitude);
     }
 
+    public void requestBarbershopDetails(Barbershop barbershop) {
+        requester.getBarbershopDetails(barbershop);
+    }
+
     @Override
     public void update(Observable observable, Object response) {
         if (response instanceof BarbershopsResult) {
             barbershops = ((BarbershopsResult) response).getBarbershops();
             setChanged();
             notifyObservers(barbershops);
+        }
+        else if (response instanceof Barbershop) {
+            Barbershop details = (Barbershop) response;
+            setChanged();
+            notifyObservers(details);
         }
         else if (response instanceof Throwable) {
             // TODO: handle exception

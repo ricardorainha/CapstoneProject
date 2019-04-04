@@ -48,6 +48,7 @@
     <string name="add_to_favorites">Add To Favorites</string>
     <string name="remove_from_favorites">Remove From Favorites</string>
     <string name="no_favorites">You don\'t have any\nfavorite barbershop.</string>
+    <string name="user_ratings_total">(%s users)</string>
 
     <array name="barbershops_tabs_titles">
         <item>List</item>

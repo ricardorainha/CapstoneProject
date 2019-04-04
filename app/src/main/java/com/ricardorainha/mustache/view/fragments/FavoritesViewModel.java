@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel;
 public class FavoritesViewModel extends ViewModel implements BarbershopsAdapter.ActionCallback {
 
     private MutableLiveData<BarbershopsAdapter> adapter = new MutableLiveData<>();
+    private MutableLiveData<Barbershop> selectedBarbershop = new MutableLiveData<>();
 
     public FavoritesViewModel() {
         Session.getInstance().getUser().observeForever(user -> updateAdapter(user));
@@ -22,12 +23,16 @@ public class FavoritesViewModel extends ViewModel implements BarbershopsAdapter.
         return adapter;
     }
 
+    public MutableLiveData<Barbershop> getSelectedBarbershop() {
+        return selectedBarbershop;
+    }
+
     private void updateAdapter(User user) {
         adapter.setValue(new BarbershopsAdapter(new ArrayList<>(user.getFavorites().values()), this));
     }
 
     @Override
     public void onDetailsClicked(Barbershop barbershop) {
-
+        this.selectedBarbershop.setValue(barbershop);
     }
 }

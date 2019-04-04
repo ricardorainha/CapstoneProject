@@ -2,8 +2,11 @@ package com.ricardorainha.mustache.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ricardorainha.mustache.model.Barbershop;
+import com.ricardorainha.mustache.model.BarbershopDetailsResult;
 import com.ricardorainha.mustache.model.BarbershopsResult;
 
+import java.util.Locale;
 import java.util.Observable;
 
 import retrofit2.Call;
@@ -29,6 +32,18 @@ public class BarbershopsDB extends Observable {
     private static double lastLongitude;
     private static BarbershopsResult bsResult;
     private static Endpoints barbershopsAPI;
+    private static final String DETAILS_FIELDS = "formatted_address," +
+            "geometry," +
+            "name," +
+            "permanently_closed," +
+            "photo," +
+            "place_id," +
+            "url," +
+            "user_ratings_total," +
+            "formatted_phone_number," +
+            "international_phone_number," +
+            "opening_hours," +
+            "website";
 
     public BarbershopsDB() {
         barbershopsAPI = getAPI();
@@ -37,6 +52,9 @@ public class BarbershopsDB extends Observable {
     public interface Endpoints {
         @GET("place/textsearch/json?key=" + MAPS_API_KEY + "&query=barbearias&radius=" + DEFAULT_RADIUS)
         Call<BarbershopsResult> getBarbershops(@Query("location") String location);
+
+        @GET("place/details/json?key=" + MAPS_API_KEY + "&fields=" + DETAILS_FIELDS)
+        Call<BarbershopDetailsResult> getBarbershopDetails(@Query("placeid") String placeId, @Query("language") String language);
     }
 
     public static Endpoints getAPI() {
@@ -89,6 +107,33 @@ public class BarbershopsDB extends Observable {
             else {
                 notifyBarbershopsObservers();
             }
+        }
+    }
+
+    public void getBarbershopDetails(Barbershop barbershop) {
+        if (barbershopsAPI != null) {
+            Call<BarbershopDetailsResult> call = barbershopsAPI.getBarbershopDetails(barbershop.getPlaceId(), Locale.getDefault().toLanguageTag());
+            call.enqueue(new Callback<BarbershopDetailsResult>() {
+                @Override
+                public void onResponse(Call<BarbershopDetailsResult> call, Response<BarbershopDetailsResult> response) {
+                    if (response.isSuccessful()) {
+                        Barbershop details = response.body().getResult();
+                        details.setRating(barbershop.getRating());
+                        setChanged();
+                        notifyObservers(details);
+                    }
+                    else {
+                        setChanged();
+                        notifyObservers();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<BarbershopDetailsResult> call, Throwable t) {
+                    setChanged();
+                    notifyObservers(t);
+                }
+            });
         }
     }
 
