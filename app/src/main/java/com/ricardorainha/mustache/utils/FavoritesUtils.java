@@ -31,7 +31,11 @@ public class FavoritesUtils {
     }
 
     public static boolean isFavorite(Barbershop barbershop) {
-        return Session.getInstance().getUser().getValue().getFavorites().containsKey(barbershop.getPlaceId());
+        if (Session.getInstance().getUser().getValue() != null) {
+            return Session.getInstance().getUser().getValue().getFavorites().containsKey(barbershop.getPlaceId());
+        }
+
+        return false;
     }
 
 }

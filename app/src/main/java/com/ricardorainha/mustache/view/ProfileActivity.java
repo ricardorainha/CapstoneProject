@@ -11,6 +11,8 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.storage.StorageException;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.ActivityProfileBinding;
 import com.ricardorainha.mustache.utils.SharedPrefUtils;
@@ -18,6 +20,7 @@ import com.ricardorainha.mustache.utils.SharedPrefUtils;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -93,9 +96,6 @@ public class ProfileActivity extends AppCompatActivity {
         if (viewModel.getUserPhotoReference().get() != null) {
             setUserProfilePhoto();
         }
-        else {
-            Glide.with(this).load(R.drawable.baseline_person_black_48).apply(RequestOptions.circleCropTransform()).into(binding.userImage);
-        }
     }
 
     private void configureObservables() {
@@ -131,8 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setUserProfilePhoto() {
         viewModel.getUserPhotoReference().get().getDownloadUrl()
-                .addOnSuccessListener(uri -> Glide.with(ProfileActivity.this).load(uri.toString()).apply(RequestOptions.circleCropTransform()).into(binding.userImage))
-                .addOnFailureListener(uri -> Glide.with(ProfileActivity.this).load(R.drawable.baseline_person_black_48).apply(RequestOptions.circleCropTransform()).into(binding.userImage));
+            .addOnSuccessListener(uri -> Glide.with(ProfileActivity.this).load(uri.toString()).apply(RequestOptions.circleCropTransform()).into(binding.userImage));
     }
 
 }

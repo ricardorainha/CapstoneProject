@@ -28,10 +28,7 @@ public class ProfileActivityViewModel extends ViewModel implements AuthManager.U
         mustFinish.set(false);
 
         if (Session.getInstance().getUser().getValue() != null) {
-            StorageReference photoReference = Session.getInstance().getUser().getValue().getPhotoReference();
-            if (photoReference != null) {
-                userPhotoReference.set(photoReference);
-            }
+            userPhotoReference.set(Session.getInstance().getUser().getValue().getPhotoReference());
         }
     }
 
