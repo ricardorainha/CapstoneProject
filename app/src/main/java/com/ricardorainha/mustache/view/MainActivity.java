@@ -1,21 +1,28 @@
 package com.ricardorainha.mustache.view;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.authentication.AuthManager;
 import com.ricardorainha.mustache.databinding.ActivityMainBinding;
+import com.ricardorainha.mustache.model.Session;
 import com.ricardorainha.mustache.utils.SharedPrefUtils;
 import com.ricardorainha.mustache.view.fragments.BarbershopsFragment;
 import com.ricardorainha.mustache.view.fragments.FavoritesFragment;
 import com.ricardorainha.mustache.view.fragments.MyScheduleFragment;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
@@ -27,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private MainActivityViewModel viewModel;
+    private MenuItem profileItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        this.profileItem = menu.findItem(R.id.menu_profile);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -78,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
                     if (!SharedPrefUtils.hasCompletedProfile(MainActivity.this)) {
                         startProfileActivity();
                     }
+
+                    configureProfilePicture();
                 }
             }
         });
@@ -111,6 +122,18 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    private void configureProfilePicture() {
+        if (profileItem != null) {
+            Session.getInstance().getUser().getValue().getPhotoReference().getDownloadUrl()
+                    .addOnSuccessListener(uri -> Glide.with(this).load(uri.toString()).apply(RequestOptions.circleCropTransform()).into(new SimpleTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            profileItem.setIcon(resource);
+                        }
+                    }));
+        }
+    }
 
     private void startProfileActivity() {
         Intent profileIntent = new Intent(this, ProfileActivity.class);

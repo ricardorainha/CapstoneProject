@@ -20,6 +20,7 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public void requestUserInfo() {
+        userInfoReceived.set(false);
         FirebaseUtils.requestUserInfo(AuthManager.getInstance().getUser().getUid(), user -> {
             if (user != null) {
                 Session.getInstance().setUser(user);
