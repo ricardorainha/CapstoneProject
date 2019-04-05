@@ -3,6 +3,7 @@ package com.ricardorainha.mustache.utils;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -77,6 +78,11 @@ public class FirebaseUtils {
 
         UploadTask uploadTask = photoReference.putBytes(photoData);
         uploadTask.addOnSuccessListener(taskSnapshot -> Log.d(TAG, "Profile photo uploaded to " + taskSnapshot.getMetadata().getPath()));
+    }
+
+    public static void removeProfilePhoto(OnCompleteListener<Void> listener) {
+        StorageReference photoReference = getFirebasePhotoPath().child(Session.getInstance().getUser().getValue().getUid() + PHOTOS_STORAGE_EXTENSION);
+        photoReference.delete().addOnCompleteListener(listener);
     }
 
     public static void deleteAccount() {

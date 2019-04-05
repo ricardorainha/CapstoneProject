@@ -11,7 +11,6 @@ import com.ricardorainha.mustache.model.User;
 import com.ricardorainha.mustache.utils.FirebaseUtils;
 import com.ricardorainha.mustache.utils.SharedPrefUtils;
 
-import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -19,17 +18,23 @@ public class ProfileActivityViewModel extends ViewModel implements AuthManager.U
 
     private MutableLiveData<String> password = new MutableLiveData<>();
     private MutableLiveData<String> passwordConfirmation = new MutableLiveData<>();
-    private ObservableField<StorageReference> userPhotoReference = new ObservableField<>();
-    private ObservableField<Bitmap> userPhotoBitmap = new ObservableField<>();
-    private ObservableField<Boolean> mustFinish = new ObservableField<>();
+    private MutableLiveData<StorageReference> userPhotoReference = new MutableLiveData<>();
+    private MutableLiveData<Bitmap> userPhotoBitmap = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mustFinish = new MutableLiveData<>();
 
 
     public ProfileActivityViewModel() {
-        mustFinish.set(false);
+        mustFinish.setValue(false);
 
         if (Session.getInstance().getUser().getValue() != null) {
-            userPhotoReference.set(Session.getInstance().getUser().getValue().getPhotoReference());
+            userPhotoReference.setValue(Session.getInstance().getUser().getValue().getPhotoReference());
         }
+
+        getUserPhotoBitmap().observeForever(bitmap -> {
+            if (bitmap != null) {
+                FirebaseUtils.updateUserPhoto(userPhotoBitmap.getValue());
+            }
+        });
     }
 
     public MutableLiveData<User> getUser() {
@@ -52,15 +57,15 @@ public class ProfileActivityViewModel extends ViewModel implements AuthManager.U
         this.passwordConfirmation = passwordConfirmation;
     }
 
-    public ObservableField<StorageReference> getUserPhotoReference() {
+    public MutableLiveData<StorageReference> getUserPhotoReference() {
         return userPhotoReference;
     }
 
-    public ObservableField<Bitmap> getUserPhotoBitmap() {
+    public MutableLiveData<Bitmap> getUserPhotoBitmap() {
         return userPhotoBitmap;
     }
 
-    public ObservableField<Boolean> getMustFinish() {
+    public MutableLiveData<Boolean> getMustFinish() {
         return mustFinish;
     }
 
@@ -77,16 +82,21 @@ public class ProfileActivityViewModel extends ViewModel implements AuthManager.U
         }
         FirebaseUtils.updateUserInfo();
 
-        if (userPhotoBitmap.get() != null) {
-            FirebaseUtils.updateUserPhoto(userPhotoBitmap.get());
-        }
-
         SharedPrefUtils.setCompletedProfile(view.getContext(), true);
-        mustFinish.set(true);
+        mustFinish.setValue(true);
     }
 
     public void onSignOutClicked() {
         AuthManager.getInstance().signOut(this);
+    }
+
+    public void onRemovePhotoClicked() {
+        FirebaseUtils.removeProfilePhoto(task -> {
+            if (task.isSuccessful()) {
+                getUserPhotoReference().setValue(null);
+                getUserPhotoBitmap().setValue(null);
+            }
+        });
     }
 
     public void onDeleteAccountClicked() {
@@ -95,6 +105,7 @@ public class ProfileActivityViewModel extends ViewModel implements AuthManager.U
 
     @Override
     public void onUserSignOut() {
-        mustFinish.set(true);
+        mustFinish.setValue(true);
     }
+
 }

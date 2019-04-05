@@ -131,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
                         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                             profileItem.setIcon(resource);
                         }
-                    }));
+                    }))
+                    .addOnFailureListener(e -> profileItem.setIcon(R.drawable.ic_account_white_36));
         }
     }
 

@@ -11,8 +11,6 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.firebase.storage.StorageException;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.ActivityProfileBinding;
 import com.ricardorainha.mustache.utils.SharedPrefUtils;
@@ -20,11 +18,9 @@ import com.ricardorainha.mustache.utils.SharedPrefUtils;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.Observable;
 import androidx.lifecycle.ViewModelProviders;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -62,10 +58,13 @@ public class ProfileActivity extends AppCompatActivity {
                 viewModel.onSignOutClicked();
                 return true;
 
+            case R.id.menu_remove_photo:
+                viewModel.onRemovePhotoClicked();
+                return true;
+
             case R.id.menu_delete_account:
                 viewModel.onDeleteAccountClicked();
                 return true;
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -86,38 +85,37 @@ public class ProfileActivity extends AppCompatActivity {
 
                 if (imageStream != null) {
                     Bitmap profilePhoto = BitmapFactory.decodeStream(imageStream);
-                    viewModel.getUserPhotoBitmap().set(profilePhoto);
+                    viewModel.getUserPhotoBitmap().setValue(profilePhoto);
                 }
             }
         }
     }
 
     private void configureFields() {
-        if (viewModel.getUserPhotoReference().get() != null) {
+        if (viewModel.getUserPhotoReference().getValue() != null) {
             setUserProfilePhoto();
         }
     }
 
     private void configureObservables() {
-        viewModel.getUserPhotoBitmap().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                Glide.with(ProfileActivity.this).load(viewModel.getUserPhotoBitmap().get()).apply(RequestOptions.circleCropTransform()).into(binding.userImage);
+        viewModel.getUserPhotoBitmap().observe(this, bitmap -> {
+            if (bitmap != null) {
+                Glide.with(ProfileActivity.this).load(viewModel.getUserPhotoBitmap().getValue()).apply(RequestOptions.circleCropTransform()).into(binding.userImage);
             }
         });
-        viewModel.getUserPhotoReference().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
+
+        viewModel.getUserPhotoReference().observe(this, storageReference -> {
+            if (storageReference != null) {
                 setUserProfilePhoto();
             }
+            else {
+                removeProfilePhoto();
+            }
         });
-        viewModel.getMustFinish().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (viewModel.getMustFinish().get()) {
-                    SharedPrefUtils.setCompletedProfile(ProfileActivity.this, false);
-                    finish();
-                }
+
+        viewModel.getMustFinish().observe(this, mustFinish -> {
+            if (mustFinish) {
+                finish();
             }
         });
     }
@@ -130,8 +128,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setUserProfilePhoto() {
-        viewModel.getUserPhotoReference().get().getDownloadUrl()
+        viewModel.getUserPhotoReference().getValue().getDownloadUrl()
             .addOnSuccessListener(uri -> Glide.with(ProfileActivity.this).load(uri.toString()).apply(RequestOptions.circleCropTransform()).into(binding.userImage));
+    }
+
+    private void removeProfilePhoto() {
+        binding.userImage.setImageDrawable(getDrawable(R.drawable.ic_account_circle_24));
     }
 
 }

@@ -8,6 +8,11 @@
         app:showAsAction="always"/>
 
     <item
+        android:id="@+id/menu_remove_photo"
+        android:title="@string/remove_photo"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/menu_delete_account"
         android:title="@string/delete_account"
         app:showAsAction="never"/>
