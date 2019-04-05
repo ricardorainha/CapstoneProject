@@ -2,7 +2,9 @@ package com.ricardorainha.mustache.view;
 
 import com.ricardorainha.mustache.model.Barbershop;
 import com.ricardorainha.mustache.model.Repository;
+import com.ricardorainha.mustache.utils.AppointmentsUtils;
 
+import java.util.Calendar;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -42,5 +44,9 @@ public class BarbershopDetailsViewModel extends ViewModel {
             loading.setValue(true);
             repo.requestBarbershopDetails(barbershop.getValue());
         }
+    }
+
+    public void schedule(Calendar scheduleDate) {
+        AppointmentsUtils.schedule(scheduleDate, getBarbershop().getValue());
     }
 }

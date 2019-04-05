@@ -1,5 +1,8 @@
 package com.ricardorainha.mustache.view;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +16,9 @@ import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.ActivityBarbershopDetailsBinding;
 import com.ricardorainha.mustache.model.LocationInfo;
 import com.ricardorainha.mustache.utils.FavoritesUtils;
+
+import java.text.DateFormat;
+import java.util.Calendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -119,6 +125,19 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
         });
     }
 
+    public void onScheduleClicked(View view) {
+        Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog dateDialog = new DatePickerDialog(this, (datePickerView, year, month, dayOfMonth) -> {
+            TimePickerDialog timeDialog = new TimePickerDialog(this, (timePickerView, hourOfDay, minute) -> {
+                showScheduleConfirmationDialog(year, month, dayOfMonth, hourOfDay, minute);
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), android.text.format.DateFormat.is24HourFormat(this));
+            timeDialog.show();
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        dateDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
+        dateDialog.show();
+    }
+
     public void onDirectionsClicked(View view) {
         startActivity(LocationInfo.getInstance().getDirectionsIntent(viewModel.getBarbershop().getValue()));
     }
@@ -145,7 +164,20 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
         openWebsiteIntent.setData(Uri.parse(viewModel.getBarbershop().getValue().getWebsite()));
 
         startActivity(openWebsiteIntent);
+    }
 
+    private void showScheduleConfirmationDialog(int year, int month, int day, int hour, int minute) {
+        Calendar scheduleDate = Calendar.getInstance();
+        scheduleDate.set(year, month, day, hour, minute, 0);
+        DateFormat dateFormat = DateFormat.getDateInstance(java.text.DateFormat.FULL);
+        DateFormat timeFormat = DateFormat.getTimeInstance(java.text.DateFormat.SHORT);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.confirmation_dialog_title));
+        builder.setMessage(getString(R.string.confirmation_dialog_message, dateFormat.format(scheduleDate.getTime()), timeFormat.format(scheduleDate.getTime())));
+        builder.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss());
+        builder.setPositiveButton(android.R.string.yes, (dialog, which) -> viewModel.schedule(scheduleDate));
+        builder.create().show();
     }
 
 }

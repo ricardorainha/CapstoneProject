@@ -17,6 +17,7 @@ public class User {
     private String email;
     private String phone;
     private HashMap<String, Barbershop> favorites = new HashMap<>();
+    private HashMap<String, Appointment> appointments = new HashMap<>();
 
     public User() { }
 
@@ -27,12 +28,13 @@ public class User {
         this.phone = phone;
     }
 
-    public User(String uid, String name, String email, String phone, HashMap<String, Barbershop> favorites) {
+    public User(String uid, String name, String email, String phone, HashMap<String, Barbershop> favorites, HashMap<String, Appointment> appointments) {
         this.uid = uid;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.favorites = favorites;
+        this.appointments = appointments;
     }
 
     public String getUid() {
@@ -75,6 +77,14 @@ public class User {
         this.favorites = favorites;
     }
 
+    public HashMap<String, Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(HashMap<String, Appointment> appointments) {
+        this.appointments = appointments;
+    }
+
     @Exclude
     public void addFavorite(Barbershop barbershop) {
         if (this.favorites != null && !this.favorites.containsKey(barbershop.getPlaceId())) {
@@ -86,6 +96,20 @@ public class User {
     public void removeFavorite(String placeId) {
         if (this.favorites != null && this.favorites.containsKey(placeId)) {
             this.favorites.remove(placeId);
+        }
+    }
+
+    @Exclude
+    public void addAppointment(Appointment appointment) {
+        if (this.appointments != null && !this.appointments.containsKey(appointment.getTime())) {
+            this.appointments.put(appointment.getTimeString(), appointment);
+        }
+    }
+
+    @Exclude
+    public void removeAppointment(String time) {
+        if (this.appointments != null && this.appointments.containsKey(time)) {
+            this.appointments.remove(time);
         }
     }
 
@@ -108,6 +132,7 @@ public class User {
         hashMap.put("email", email);
         hashMap.put("phone", phone);
         hashMap.put("favorites", favorites);
+        hashMap.put("appointments", appointments);
 
         return hashMap;
     }

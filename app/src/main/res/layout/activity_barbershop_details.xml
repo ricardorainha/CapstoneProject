@@ -39,7 +39,7 @@
                 android:layout_marginEnd="8dp"
                 android:text="@{viewModel.barbershop.name}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"
+                app:layout_constraintEnd_toStartOf="@+id/fab_directions"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_details_photo"
                 tools:text="Hell's Kitchen Barbers" />
@@ -99,7 +99,7 @@
                 android:onClick="onAddressClicked"
                 android:text="@{viewModel.barbershop.formattedAddress}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/fab_directions"
                 app:layout_constraintStart_toEndOf="@+id/iv_address"
                 app:layout_constraintTop_toTopOf="@+id/iv_address"
                 tools:text="667 9th Ave, New York, NY 10036, EUA" />
@@ -124,7 +124,7 @@
                 android:onClick="onPhoneClicked"
                 android:text="@{viewModel.barbershop.formattedPhoneNumber}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/fab_directions"
                 app:layout_constraintStart_toEndOf="@+id/iv_phone"
                 app:layout_constraintTop_toTopOf="@+id/iv_phone"
                 tools:text="+1 212-470-7204" />
@@ -149,7 +149,7 @@
                 android:onClick="onWebsiteClicked"
                 android:text="@{viewModel.barbershop.website}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/fab_directions"
                 app:layout_constraintStart_toEndOf="@+id/iv_website"
                 app:layout_constraintTop_toTopOf="@+id/iv_website"
                 tools:text="http://www.hellskitchenbarbers.com" />
@@ -199,16 +199,31 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton"
+                android:id="@+id/fab_schedule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:clickable="true"
-                android:onClick="onDirectionsClicked"
+                android:onClick="onScheduleClicked"
+                android:tint="@android:color/white"
                 app:elevation="10dp"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_details_photo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_details_photo"
+                app:srcCompat="@drawable/ic_calendar_black_24" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_directions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:onClick="onDirectionsClicked"
+                android:backgroundTint="@color/colorPrimary"
+                app:elevation="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fab_schedule"
                 app:srcCompat="@drawable/ic_directions_white_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

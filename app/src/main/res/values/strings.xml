@@ -52,6 +52,8 @@
     <string name="map_add_to_favorites">%s added to favorites.</string>
     <string name="map_already_on_favorites">%s is already a favorite.</string>
     <string name="remove_photo">Remove Photo</string>
+    <string name="confirmation_dialog_title">Appointment confirmation</string>
+    <string name="confirmation_dialog_message">Schedule on this barbershop to %s at %s?</string>
 
     <array name="barbershops_tabs_titles">
         <item>List</item>
