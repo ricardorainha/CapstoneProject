@@ -1,31 +1,64 @@
 package com.ricardorainha.mustache.view.fragments;
 
-
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ricardorainha.mustache.R;
+import com.ricardorainha.mustache.databinding.FragmentMyScheduleBinding;
+import com.ricardorainha.mustache.model.LocationInfo;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MyScheduleFragment extends Fragment {
 
+    private FragmentMyScheduleBinding binding;
+    private MyScheduleViewModel viewModel;
 
     public MyScheduleFragment() {
-        // Required empty public constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_schedule, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_schedule, container, false);
+        viewModel = ViewModelProviders.of(this).get(MyScheduleViewModel.class);
+        binding.setViewModel(viewModel);
+
+        configureFields();
+        configureObservables();
+
+        return binding.getRoot();
+    }
+
+    private void configureFields() {
+        binding.rvAppointments.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvAppointments.setHasFixedSize(true);
+    }
+
+    private void configureObservables() {
+        viewModel.getAdapter().observe(this, adapter -> binding.rvAppointments.setAdapter(adapter));
+        viewModel.getDirectionsAppointment().observe(this, appointment -> {
+            if (appointment != null) {
+                startActivity(LocationInfo.getInstance().getDirectionsIntent(viewModel.getDirectionsAppointment().getValue().getBarbershop()));
+            }
+        });
+        viewModel.getAppointmentToCancel().observe(this, appointment -> {
+            if (appointment != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(getString(R.string.cancelation_dialog_title));
+                builder.setMessage(getString(R.string.cancelation_dialog_message, appointment.getBarbershop().getName()));
+                builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
+                builder.setPositiveButton(R.string.yes, (dialog, which) -> viewModel.cancelAppointment(appointment));
+                builder.create().show();
+            }
+        });
     }
 
 }

@@ -107,9 +107,16 @@ public class User {
     }
 
     @Exclude
-    public void removeAppointment(String time) {
+    public void confirmAppointment(String time) {
         if (this.appointments != null && this.appointments.containsKey(time)) {
-            this.appointments.remove(time);
+            this.appointments.get(time).setConfirmed(true);
+        }
+    }
+
+    @Exclude
+    public void cancelAppointment(String time) {
+        if (this.appointments != null && this.appointments.containsKey(time)) {
+            this.appointments.get(time).setCanceled(true);
         }
     }
 

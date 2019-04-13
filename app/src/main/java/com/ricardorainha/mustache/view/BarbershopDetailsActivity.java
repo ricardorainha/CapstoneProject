@@ -175,8 +175,16 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.confirmation_dialog_title));
         builder.setMessage(getString(R.string.confirmation_dialog_message, dateFormat.format(scheduleDate.getTime()), timeFormat.format(scheduleDate.getTime())));
-        builder.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss());
-        builder.setPositiveButton(android.R.string.yes, (dialog, which) -> viewModel.schedule(scheduleDate));
+        builder.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+            viewModel.schedule(scheduleDate);
+
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+            alertBuilder.setTitle(getString(R.string.confirmation_dialog_title));
+            alertBuilder.setMessage(getString(R.string.confirmation_scheduled_dialog_message, viewModel.getBarbershop().getValue().getName()));
+            alertBuilder.setPositiveButton(android.R.string.ok, (dialog2, which2) -> dialog2.dismiss());
+            alertBuilder.create().show();
+        });
         builder.create().show();
     }
 

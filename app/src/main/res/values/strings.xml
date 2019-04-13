@@ -54,7 +54,15 @@
     <string name="remove_photo">Remove Photo</string>
     <string name="confirmation_dialog_title">Appointment confirmation</string>
     <string name="confirmation_dialog_message">Schedule on this barbershop to %s at %s?</string>
-
+    <string name="confirmation_scheduled_dialog_message">Appointment scheduled on %s. Once the barbershop confirms your appointment, you will be notified about it.</string>
+    <string name="no_appointments">You don\'t have any appointment.</string>
+    <string name="status_confirmed">Confirmed by Barbershop</string>
+    <string name="status_pending">Pending Confirmation</string>
+    <string name="status_canceled">Canceled by the user</string>
+    <string name="cancelation_dialog_title">Cancel Appointment</string>
+    <string name="cancelation_dialog_message">Cancel this appointment on %s?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
     <array name="barbershops_tabs_titles">
         <item>List</item>
         <item>Map</item>

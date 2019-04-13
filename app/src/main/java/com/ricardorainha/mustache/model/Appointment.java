@@ -6,14 +6,16 @@ public class Appointment {
     private long scheduledOn;
     private Barbershop barbershop;
     private boolean confirmed;
+    private boolean canceled;
 
     public Appointment() { }
 
-    public Appointment(long time, long scheduledOn, Barbershop barbershop, boolean confirmed) {
+    public Appointment(long time, long scheduledOn, Barbershop barbershop, boolean confirmed, boolean canceled) {
         this.time = time;
         this.scheduledOn = scheduledOn;
         this.barbershop = barbershop;
         this.confirmed = confirmed;
+        this.canceled = canceled;
     }
 
     public long getTime() {
@@ -50,6 +52,14 @@ public class Appointment {
 
     public void setConfirmed(boolean confirmed) {
         this.confirmed = confirmed;
+    }
+
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 
     public boolean hasAlreadyPassed() {

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.text.TextUtils" />
+        <variable
+            name="appointment"
+            type="com.ricardorainha.mustache.model.Appointment" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:padding="4dp"
+        android:elevation="10dp"
+        app:cardCornerRadius="2dp">
+
+        <LinearLayout
+            android:layout_margin="8dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_schedule_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="FEB" />
+
+                <TextView
+                    android:id="@+id/tv_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_month"
+                    app:layout_constraintStart_toEndOf="@+id/tv_month"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_month"
+                    tools:text="25" />
+
+                <TextView
+                    android:id="@+id/tv_barbershop_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:text="@{appointment.barbershop.name}"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_expand"
+                    app:layout_constraintStart_toEndOf="@+id/tv_month"
+                    app:layout_constraintTop_toTopOf="@+id/tv_month"
+                    tools:text="Hell’s Kitchen Barbershop and Tattoo" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tv_barbershop_name"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_barbershop_name"
+                    tools:text="5:30 PM" />
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@{ safeUnbox(appointment.canceled) ? @string/status_canceled : safeUnbox(appointment.confirmed) ? @string/status_confirmed : @string/status_pending }"
+                    android:textAlignment="textEnd"
+                    android:textAllCaps="true"
+                    android:textColor="@{ safeUnbox(appointment.canceled) ? @android:color/holo_red_dark : safeUnbox(appointment.confirmed) ? @android:color/holo_green_dark : @android:color/black }"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_time"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_time"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_time"
+                    tools:text="@string/status_pending" />
+
+                <ImageView
+                    android:id="@+id/iv_expand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_barbershop_name"
+                    app:srcCompat="@drawable/ic_expand_more_black_36" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@{appointment.barbershop.formattedAddress}"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_directions"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="667 9th Ave, New York, NY 10036, EUA" />
+
+                <TextView
+                    android:id="@+id/tv_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@{appointment.barbershop.formattedPhoneNumber}"
+                    android:visibility="@{ safeUnbox(TextUtils.isEmpty(appointment.barbershop.formattedPhoneNumber)) ? View.GONE : View.VISIBLE }"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tv_address"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_address"
+                    tools:text="+1 212-470-7204" />
+
+                <ImageView
+                    android:id="@+id/iv_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="@{ safeUnbox(appointment.hasAlreadyPassed() || appointment.canceled) ? View.GONE : View.VISIBLE }"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_directions"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/iv_directions"
+                    app:srcCompat="@drawable/ic_delete_black_24" />
+
+                <ImageView
+                    android:id="@+id/iv_directions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:tint="@android:color/black"
+                    android:visibility="@{ safeUnbox(appointment.hasAlreadyPassed()) ? View.GONE : View.VISIBLE }"
+                    app:layout_constraintBottom_toTopOf="@id/tv_address"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_delete"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_address"
+                    app:srcCompat="@drawable/ic_directions_white_24" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>
