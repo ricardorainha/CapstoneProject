@@ -1,6 +1,7 @@
 package com.ricardorainha.mustache.view.fragments;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,9 @@ import android.view.ViewGroup;
 
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.FragmentMyScheduleBinding;
+import com.ricardorainha.mustache.model.Barbershop;
 import com.ricardorainha.mustache.model.LocationInfo;
+import com.ricardorainha.mustache.view.BarbershopDetailsActivity;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -59,6 +62,17 @@ public class MyScheduleFragment extends Fragment {
                 builder.create().show();
             }
         });
+        viewModel.getBarbershopDetails().observe(this, barbershop -> {
+            if (barbershop != null) {
+                showDetails(barbershop);
+            }
+        });
+    }
+
+    private void showDetails(Barbershop barbershop) {
+        Intent detailsIntent = new Intent(this.getContext(), BarbershopDetailsActivity.class);
+        detailsIntent.putExtra(BarbershopDetailsActivity.BARBERSHOP_KEY, barbershop);
+        startActivity(detailsIntent);
     }
 
 }

@@ -70,6 +70,7 @@ public class BarbershopsAdapter extends RecyclerView.Adapter<BarbershopsAdapter.
             binding.tvName.setText(barbershop.getName());
             binding.tvRating.setText(String.valueOf(barbershop.getRating()));
             binding.tvAddress.setText(barbershop.getFormattedAddress());
+            binding.ivPhoto.setOnClickListener(v -> callback.onDetailsClicked(barbershop));
             binding.btnDetails.setOnClickListener(v -> callback.onDetailsClicked(barbershop));
             checkFavoritesButtonText(barbershop);
             binding.btnFavorites.setOnClickListener(v -> {

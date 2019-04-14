@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.ScheduleListItemBinding;
 import com.ricardorainha.mustache.model.Appointment;
+import com.ricardorainha.mustache.model.Barbershop;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -83,6 +84,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 binding.clDetails.setVisibility(expand ? View.VISIBLE : View.GONE);
             });
 
+            binding.ivInfo.setOnClickListener(v -> listener.onInfoClicked(appointment.getBarbershop()));
             binding.ivDirections.setOnClickListener(v -> listener.onDirectionsClicked(appointment));
             binding.ivDelete.setOnClickListener(v -> listener.onCancelClicked(appointment));
 
@@ -98,6 +100,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     }
 
     public interface ClickListener {
+        void onInfoClicked(Barbershop barbershop);
         void onDirectionsClicked(Appointment appointment);
         void onCancelClicked(Appointment appointment);
     }

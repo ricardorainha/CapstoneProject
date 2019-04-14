@@ -114,6 +114,7 @@
                 android:visibility="gone">
 
                 <View
+                    android:id="@+id/view"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@android:color/darker_gray"
@@ -127,20 +128,22 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:text="@{appointment.barbershop.formattedAddress}"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_directions"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="667 9th Ave, New York, NY 10036, EUA" />
 
                 <TextView
                     android:id="@+id/tv_phone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
                     android:text="@{appointment.barbershop.formattedPhoneNumber}"
                     android:visibility="@{ safeUnbox(TextUtils.isEmpty(appointment.barbershop.formattedPhoneNumber)) ? View.GONE : View.VISIBLE }"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_info"
                     app:layout_constraintStart_toStartOf="@+id/tv_address"
                     app:layout_constraintTop_toBottomOf="@+id/tv_address"
                     tools:text="+1 212-470-7204" />
@@ -159,14 +162,24 @@
                 <ImageView
                     android:id="@+id/iv_directions"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_height="21dp"
+                    android:layout_marginEnd="16dp"
                     android:tint="@android:color/black"
                     android:visibility="@{ safeUnbox(appointment.hasAlreadyPassed()) ? View.GONE : View.VISIBLE }"
-                    app:layout_constraintBottom_toTopOf="@id/tv_address"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_info"
                     app:layout_constraintEnd_toStartOf="@+id/iv_delete"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_address"
+                    app:layout_constraintTop_toTopOf="@+id/iv_info"
                     app:srcCompat="@drawable/ic_directions_white_24" />
+
+                <ImageView
+                    android:id="@+id/iv_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_phone"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_directions"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_phone"
+                    app:srcCompat="@drawable/baseline_info_black_24" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
