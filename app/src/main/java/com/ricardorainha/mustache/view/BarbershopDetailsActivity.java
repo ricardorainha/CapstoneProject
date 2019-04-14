@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.ActivityBarbershopDetailsBinding;
 import com.ricardorainha.mustache.model.LocationInfo;
+import com.ricardorainha.mustache.utils.AppointmentsUtils;
 import com.ricardorainha.mustache.utils.FavoritesUtils;
 
 import java.text.DateFormat;
@@ -182,7 +183,12 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
             alertBuilder.setTitle(getString(R.string.confirmation_dialog_title));
             alertBuilder.setMessage(getString(R.string.confirmation_scheduled_dialog_message, viewModel.getBarbershop().getValue().getName()));
-            alertBuilder.setPositiveButton(android.R.string.ok, (dialog2, which2) -> dialog2.dismiss());
+            alertBuilder.setPositiveButton(android.R.string.ok, (dialog2, which2) -> {
+                dialog2.dismiss();
+
+                // schedule notification to be thrown after 1 minute to simulate barbershop response
+                AppointmentsUtils.scheduleConfirmationNotification(this, viewModel.getBarbershop().getValue(), scheduleDate);
+            });
             alertBuilder.create().show();
         });
         builder.create().show();

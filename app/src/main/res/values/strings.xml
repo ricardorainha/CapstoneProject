@@ -63,6 +63,11 @@
     <string name="cancelation_dialog_message">Cancel this appointment on %s?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="notification_channel_id">confirmation_channel</string>
+    <string name="notification_channel_name">Confirmations Channel</string>
+    <string name="notification_channel_description">Channel that receives Barbershops\' appointments confirmation</string>
+    <string name="notification_confirmation_title">Appointment confirmed!</string>
+    <string name="notification_confirmation_text">%s confirmed your appointment, you can track your appointments on the My Schedule tab</string>
     <array name="barbershops_tabs_titles">
         <item>List</item>
         <item>Map</item>
