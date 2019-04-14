@@ -88,13 +88,6 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             binding.ivDirections.setOnClickListener(v -> listener.onDirectionsClicked(appointment));
             binding.ivDelete.setOnClickListener(v -> listener.onCancelClicked(appointment));
 
-            if (appointment.hasAlreadyPassed()) {
-                binding.tvMonth.setPaintFlags(binding.tvMonth.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                binding.tvDay.setPaintFlags(binding.tvDay.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                binding.tvBarbershopName.setPaintFlags(binding.tvBarbershopName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                binding.tvTime.setPaintFlags(binding.tvTime.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            }
-
             binding.executePendingBindings();
         }
     }
