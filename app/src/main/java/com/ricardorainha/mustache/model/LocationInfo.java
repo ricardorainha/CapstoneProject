@@ -20,6 +20,7 @@ public class LocationInfo {
     }
 
     private MutableLiveData<Location> lastLocation = new MutableLiveData<>();
+    private boolean userLocationDefined = false;
 
     public static LocationInfo getInstance() {
         return ourInstance;
@@ -38,14 +39,17 @@ public class LocationInfo {
 
     public void getCurrentLocation(FusedLocationProviderClient flpClient) {
         try {
-            Task<Location> locationResult = flpClient.getLastLocation();
-            locationResult.addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    getLastLocation().setValue(task.getResult());
-                } else {
-                    setDefaultLocation();
-                }
-            });
+            if (!userLocationDefined) {
+                Task<Location> locationResult = flpClient.getLastLocation();
+                locationResult.addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        getLastLocation().setValue(task.getResult());
+                    } else {
+                        setDefaultLocation();
+                    }
+                });
+                userLocationDefined = true;
+            }
         }
         catch (SecurityException e) {
             e.printStackTrace();
@@ -64,5 +68,9 @@ public class LocationInfo {
         directionsIntent.setData(Uri.parse(url));
 
         return directionsIntent;
+    }
+
+    public interface LocationDefinedListener {
+        void onLocationDefined();
     }
 }
