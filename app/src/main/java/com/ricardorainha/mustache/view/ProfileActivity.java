@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.ActivityProfileBinding;
@@ -100,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void configureObservables() {
         viewModel.getUserPhotoBitmap().observe(this, bitmap -> {
             if (bitmap != null) {
-                Glide.with(ProfileActivity.this).load(viewModel.getUserPhotoBitmap().getValue()).apply(RequestOptions.circleCropTransform()).into(binding.userImage);
+                Glide.with(ProfileActivity.this).load(viewModel.getUserPhotoBitmap().getValue()).diskCacheStrategy(DiskCacheStrategy.ALL).apply(RequestOptions.circleCropTransform()).into(binding.userImage);
             }
         });
 
@@ -129,7 +130,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setUserProfilePhoto() {
         viewModel.getUserPhotoReference().getValue().getDownloadUrl()
-            .addOnSuccessListener(uri -> Glide.with(ProfileActivity.this).load(uri.toString()).apply(RequestOptions.circleCropTransform()).into(binding.userImage));
+            .addOnSuccessListener(uri -> Glide.with(ProfileActivity.this).load(uri.toString()).diskCacheStrategy(DiskCacheStrategy.ALL).apply(RequestOptions.circleCropTransform()).into(binding.userImage));
     }
 
     private void removeProfilePhoto() {

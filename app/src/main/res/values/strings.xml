@@ -68,6 +68,7 @@
     <string name="notification_channel_description">Channel that receives Barbershops\' appointments confirmation</string>
     <string name="notification_confirmation_title">Appointment confirmed!</string>
     <string name="notification_confirmation_text">%s confirmed your appointment, you can track your appointments on the My Schedule tab</string>
+    <string name="app_now_in_offline_mode">App now in offline mode</string>
     <array name="barbershops_tabs_titles">
         <item>List</item>
         <item>Map</item>

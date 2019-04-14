@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,9 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.ActivityBarbershopDetailsBinding;
 import com.ricardorainha.mustache.model.LocationInfo;
+import com.ricardorainha.mustache.model.Session;
+import com.ricardorainha.mustache.receivers.ConnectionChangeReceiver;
 import com.ricardorainha.mustache.utils.AppointmentsUtils;
 import com.ricardorainha.mustache.utils.FavoritesUtils;
 
@@ -31,6 +37,7 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
     private ActivityBarbershopDetailsBinding binding;
     private BarbershopDetailsViewModel viewModel;
     private MenuItem itemFavorite;
+    private ConnectionChangeReceiver connectionChangeReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +48,28 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this).get(BarbershopDetailsViewModel.class);
         binding.setViewModel(viewModel);
 
+        connectionChangeReceiver = new ConnectionChangeReceiver();
+
         configureObservables();
 
         if (getIntent().hasExtra(BARBERSHOP_KEY)) {
             viewModel.getBarbershop().setValue(getIntent().getParcelableExtra(BARBERSHOP_KEY));
-            viewModel.retrieveBarbershopDetails();
+            if (Session.getInstance().getOnlineStatus().getValue()) {
+                viewModel.retrieveBarbershopDetails();
+            }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerConnectionReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterConnectionReceiver();
     }
 
     @Override
@@ -92,7 +115,7 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
         viewModel.getBarbershop().observe(this, barbershop -> {
             if (binding.ivDetailsPhoto.getDrawable() == null) {
                 if (barbershop.getPhotos().size() > 0) {
-                    Glide.with(BarbershopDetailsActivity.this).load(barbershop.getPhotoUrl()).into(binding.ivDetailsPhoto);
+                    Glide.with(BarbershopDetailsActivity.this).load(barbershop.getPhotoUrl()).placeholder(R.drawable.mustache_black_background).diskCacheStrategy(DiskCacheStrategy.ALL).into(binding.ivDetailsPhoto);
                 }
                 else {
                     Glide.with(BarbershopDetailsActivity.this).load(R.drawable.mustache_black_background).into(binding.ivDetailsPhoto);
@@ -123,6 +146,11 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
         viewModel.getLoading().observe(this, loading -> {
             binding.flPanel.setVisibility(loading ? View.VISIBLE : View.GONE);
             binding.pbLoading.setVisibility(loading ? View.VISIBLE : View.GONE);
+        });
+
+        Session.getInstance().getOnlineStatus().observe(this, connected -> {
+            binding.fabSchedule.setEnabled(connected);
+            binding.fabSchedule.setBackgroundTintList(ColorStateList.valueOf(getColor(connected ? R.color.colorAccent : android.R.color.darker_gray)));
         });
     }
 
@@ -192,6 +220,16 @@ public class BarbershopDetailsActivity extends AppCompatActivity {
             alertBuilder.create().show();
         });
         builder.create().show();
+    }
+
+    private void registerConnectionReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(connectionChangeReceiver, intentFilter);
+    }
+
+    private void unregisterConnectionReceiver() {
+        unregisterReceiver(connectionChangeReceiver);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.ricardorainha.mustache.adapter;
 
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import com.ricardorainha.mustache.R;
 import com.ricardorainha.mustache.databinding.ScheduleListItemBinding;
 import com.ricardorainha.mustache.model.Appointment;
 import com.ricardorainha.mustache.model.Barbershop;
+import com.ricardorainha.mustache.model.Session;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -87,6 +87,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             binding.ivInfo.setOnClickListener(v -> listener.onInfoClicked(appointment.getBarbershop()));
             binding.ivDirections.setOnClickListener(v -> listener.onDirectionsClicked(appointment));
             binding.ivDelete.setOnClickListener(v -> listener.onCancelClicked(appointment));
+            Session.getInstance().getOnlineStatus().observeForever(connected -> {
+                binding.ivDelete.setEnabled(connected);
+                binding.ivDelete.setAlpha(connected ? 1.0f : 0.4f);
+            });
 
             binding.executePendingBindings();
         }

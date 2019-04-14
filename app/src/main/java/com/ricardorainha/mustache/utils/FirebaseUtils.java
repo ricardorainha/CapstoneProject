@@ -27,10 +27,21 @@ public class FirebaseUtils {
     private static final String PHOTOS_STORAGE_REFERENCE = "photos";
     private static final String PHOTOS_STORAGE_EXTENSION = ".jpg";
 
+    private static FirebaseDatabase instance;
+
+    private static FirebaseDatabase getFirebaseDatabaseInstance() {
+        if (instance == null) {
+            instance = FirebaseDatabase.getInstance();
+            instance.setPersistenceEnabled(true);
+        }
+
+        return instance;
+    }
+
     public static void createUserInfo(User user, AuthManager.UserDataChange listener) {
         requestUserInfo(user.getUid(), dbUser -> {
             if (dbUser == null) {
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                FirebaseDatabase database = getFirebaseDatabaseInstance();
                 DatabaseReference userReference = database.getReference(USERS_DATABASE_REFERENCE).child(user.getUid()).getRef();
                 userReference.setValue(user).addOnCompleteListener(task -> {
                     Log.d(TAG, "User with UID " + user.getUid() + " created on RealtimeDatabase");
@@ -47,12 +58,12 @@ public class FirebaseUtils {
 
     public static void updateUserInfo() {
         User user = Session.getInstance().getUser().getValue();
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(USERS_DATABASE_REFERENCE).child(user.getUid());
+        DatabaseReference userReference = getFirebaseDatabaseInstance().getReference(USERS_DATABASE_REFERENCE).child(user.getUid());
         userReference.updateChildren(user.toMap(), (databaseError, databaseReference) -> Log.d(TAG, "User with UID " + user.getUid() + " updated on RealtimeDatabase"));
     }
 
     public static void requestUserInfo(String uid, Session.Callback callback) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = getFirebaseDatabaseInstance();
         DatabaseReference userReference = database.getReference(USERS_DATABASE_REFERENCE).child(uid);
 
         userReference.addValueEventListener(new ValueEventListener() {
@@ -88,7 +99,7 @@ public class FirebaseUtils {
     public static void deleteAccount() {
         User user = Session.getInstance().getUser().getValue();
         getProfilePhotoPath(user.getUid()).delete();
-        FirebaseDatabase.getInstance().getReference(USERS_DATABASE_REFERENCE).child(user.getUid()).removeValue();
+        getFirebaseDatabaseInstance().getReference(USERS_DATABASE_REFERENCE).child(user.getUid()).removeValue();
     }
 
     public static StorageReference getFirebasePhotoPath() {
