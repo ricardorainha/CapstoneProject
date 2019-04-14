@@ -47,7 +47,7 @@ public class AppointmentsUtils {
             @Override
             public void run() {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getString(R.string.notification_channel_id))
-                        .setSmallIcon(R.drawable.mustache)
+                        .setSmallIcon(R.drawable.ic_mustache_white_24)
                         .setContentTitle(context.getString(R.string.notification_confirmation_title))
                         .setContentText(context.getString(R.string.notification_confirmation_text, barbershop.getName()))
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notification_confirmation_text, barbershop.getName())))

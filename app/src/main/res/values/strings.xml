@@ -73,4 +73,6 @@
         <item>List</item>
         <item>Map</item>
     </array>
+    <string name="appwidget_title">Next Appointment</string>
+    <string name="no_future_appointment">No Future Appointment</string>
 </resources>

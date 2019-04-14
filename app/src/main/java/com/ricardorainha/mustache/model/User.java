@@ -6,7 +6,10 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.storage.StorageReference;
 import com.ricardorainha.mustache.utils.FirebaseUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @IgnoreExtraProperties
@@ -118,6 +121,27 @@ public class User {
         if (this.appointments != null && this.appointments.containsKey(time)) {
             this.appointments.get(time).setCanceled(true);
         }
+    }
+
+    @Exclude
+    public Appointment getNextAppointment() {
+        long currentTimeInMillis = System.currentTimeMillis();
+        List<Appointment> appointments = new ArrayList<>(getAppointments().values());
+        Collections.sort(appointments, (a1, a2) -> Long.compare(a2.getTime(), a1.getTime()));
+
+        Appointment nextAppointment = null;
+        for (Appointment appointment : appointments) {
+            if (appointment.getTime() > currentTimeInMillis) {
+                if (!appointment.isCanceled()) {
+                    nextAppointment = appointment;
+                }
+            }
+            else {
+                break;
+            }
+        }
+
+        return nextAppointment;
     }
 
     @Exclude

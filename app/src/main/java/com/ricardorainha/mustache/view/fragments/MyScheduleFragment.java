@@ -1,6 +1,7 @@
 package com.ricardorainha.mustache.view.fragments;
 
 import android.app.AlertDialog;
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -46,7 +47,13 @@ public class MyScheduleFragment extends Fragment {
     }
 
     private void configureObservables() {
-        viewModel.getAdapter().observe(this, adapter -> binding.rvAppointments.setAdapter(adapter));
+        viewModel.getAdapter().observe(this, adapter -> {
+            binding.rvAppointments.setAdapter(adapter);
+
+            Intent widgetUpdateIntent = new Intent();
+            widgetUpdateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            getContext().sendBroadcast(widgetUpdateIntent);
+        });
         viewModel.getDirectionsAppointment().observe(this, appointment -> {
             if (appointment != null) {
                 startActivity(LocationInfo.getInstance().getDirectionsIntent(viewModel.getDirectionsAppointment().getValue().getBarbershop()));
