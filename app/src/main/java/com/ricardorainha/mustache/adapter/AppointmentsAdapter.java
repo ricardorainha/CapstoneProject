@@ -27,6 +27,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
     public AppointmentsAdapter(List<Appointment> appointments, ClickListener listener) {
         Collections.sort(appointments, (a1, a2) -> Long.compare(a2.getTime(), a1.getTime()));
+        Collections.sort(appointments, (a1, a2) -> Boolean.compare(a1.isCanceled(), a2.isCanceled()));
         this.appointments = appointments;
         this.listener = listener;
     }
