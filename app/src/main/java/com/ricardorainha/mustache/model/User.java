@@ -97,7 +97,7 @@ public class User {
 
     @Exclude
     public void removeFavorite(String placeId) {
-        if (this.favorites != null && this.favorites.containsKey(placeId)) {
+        if (this.favorites != null) {
             this.favorites.remove(placeId);
         }
     }

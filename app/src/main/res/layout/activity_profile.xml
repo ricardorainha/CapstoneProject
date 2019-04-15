@@ -32,7 +32,8 @@
                 android:src="@drawable/ic_account_circle_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/description_user_profile_photo" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/user_name_layout"

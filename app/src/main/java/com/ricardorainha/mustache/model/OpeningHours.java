@@ -17,7 +17,7 @@ public class OpeningHours implements Parcelable
     private boolean openNow;
     @SerializedName("weekday_text")
     @Expose
-    private List<String> weekdayText = new ArrayList<String>();
+    private List<String> weekdayText = new ArrayList<>();
     public final static Parcelable.Creator<OpeningHours> CREATOR = new Creator<OpeningHours>() {
 
 

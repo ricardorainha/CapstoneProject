@@ -31,7 +31,7 @@ public class NextAppointmentWidget extends AppWidgetProvider {
                     date.setTimeInMillis(nextAppointment.getTime());
                     DateFormat timeFormat = DateFormat.getTimeInstance(java.text.DateFormat.SHORT);
 
-                    views.setTextViewText(R.id.widget_tv_month, date.getDisplayName(Calendar.MONTH, Calendar.SHORT_FORMAT, Locale.getDefault()).toUpperCase());
+                    views.setTextViewText(R.id.widget_tv_month, date.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()).toUpperCase());
                     views.setTextViewText(R.id.widget_tv_day, String.valueOf(date.get(Calendar.DAY_OF_MONTH)));
                     views.setTextViewText(R.id.widget_tv_barbershop_name, nextAppointment.getBarbershop().getName());
                     views.setTextViewText(R.id.widget_tv_time, timeFormat.format(date.getTime()));

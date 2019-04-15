@@ -27,7 +27,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/barbershop_sample_image" />
+                tools:src="@drawable/mustache_black_background"
+                android:contentDescription="@string/description_barbershop_photo" />
 
             <TextView
                 android:id="@+id/tv_name"
@@ -54,7 +55,7 @@
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="4"
-                android:drawableRight="@drawable/ic_star_rate_black_36"
+                android:drawableEnd="@drawable/ic_star_rate_black_36"
                 android:drawableTint="@color/yellow_rating"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:textColor="@color/yellow_rating"

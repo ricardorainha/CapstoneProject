@@ -133,28 +133,25 @@ public class MainActivity extends AppCompatActivity {
         binding.navigationBar.setOnNavigationItemSelectedListener(navigationListener);
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navigationListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+    private BottomNavigationView.OnNavigationItemSelectedListener navigationListener = menuItem -> {
 
-            Fragment activeFragment = null;
+        Fragment activeFragment = null;
 
-            switch (menuItem.getItemId()) {
-                case R.id.navigation_barbershops:
-                    activeFragment = new BarbershopsFragment();
-                    break;
-                case R.id.navigation_favorites:
-                    activeFragment = new FavoritesFragment();
-                    break;
-                case R.id.navigation_my_schedule:
-                    activeFragment = new MyScheduleFragment();
-                    break;
-            }
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, activeFragment).commit();
-
-            return true;
+        switch (menuItem.getItemId()) {
+            case R.id.navigation_barbershops:
+                activeFragment = new BarbershopsFragment();
+                break;
+            case R.id.navigation_favorites:
+                activeFragment = new FavoritesFragment();
+                break;
+            case R.id.navigation_my_schedule:
+                activeFragment = new MyScheduleFragment();
+                break;
         }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, activeFragment).commit();
+
+        return true;
     };
 
     private void configureProfilePicture() {

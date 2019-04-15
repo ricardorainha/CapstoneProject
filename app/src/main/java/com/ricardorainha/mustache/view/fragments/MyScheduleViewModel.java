@@ -20,7 +20,7 @@ public class MyScheduleViewModel extends ViewModel implements AppointmentsAdapte
     private MutableLiveData<Barbershop> barbershopDetails = new MutableLiveData<>();
 
     public MyScheduleViewModel() {
-        Session.getInstance().getUser().observeForever(user -> updateAdapter(user));
+        Session.getInstance().getUser().observeForever(this::updateAdapter);
     }
 
     public MutableLiveData<AppointmentsAdapter> getAdapter() {

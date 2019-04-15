@@ -14,7 +14,7 @@ public class BarbershopsResult implements Parcelable
 
     @SerializedName("results")
     @Expose
-    private List<Barbershop> barbershops = new ArrayList<Barbershop>();
+    private List<Barbershop> barbershops = new ArrayList<>();
 
     public final static Parcelable.Creator<BarbershopsResult> CREATOR = new Creator<BarbershopsResult>() {
 

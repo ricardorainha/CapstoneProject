@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class BarbershopsAdapter extends RecyclerView.Adapter<BarbershopsAdapter.BarbershopsViewHolder> {
 
-    private BarbershopsListItemBinding binding;
     private List<Barbershop> barbershops;
     private ActionCallback callback;
 
@@ -31,10 +30,9 @@ public class BarbershopsAdapter extends RecyclerView.Adapter<BarbershopsAdapter.
     @Override
     public BarbershopsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        binding = DataBindingUtil.inflate(inflater, R.layout.barbershops_list_item, parent, false);
-        BarbershopsViewHolder viewHolder = new BarbershopsViewHolder(binding);
+        BarbershopsListItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.barbershops_list_item, parent, false);
 
-        return viewHolder;
+        return new BarbershopsViewHolder(binding);
     }
 
     @Override

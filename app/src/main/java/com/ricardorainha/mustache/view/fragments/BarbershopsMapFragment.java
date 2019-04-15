@@ -157,7 +157,7 @@ public class BarbershopsMapFragment extends Fragment implements OnMapReadyCallba
             binding.progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         });
 
-        viewModel.getBarbershops().observe(this, barbershops -> updateMap(barbershops));
+        viewModel.getBarbershops().observe(this, this::updateMap);
     }
 
     private void updateMap(List<Barbershop> barbershops) {

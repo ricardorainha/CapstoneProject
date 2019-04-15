@@ -119,9 +119,7 @@ public class AuthManager {
 
     public void resetPassword(String email, LoginStateChange listener) {
         auth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    listener.onResetPasswordFinished(task.isSuccessful());
-                });
+                .addOnCompleteListener(task -> listener.onResetPasswordFinished(task.isSuccessful()));
     }
 
     public void deleteAccount(UserStateChange listener) {

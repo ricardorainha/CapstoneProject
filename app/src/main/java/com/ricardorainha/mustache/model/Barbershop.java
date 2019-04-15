@@ -33,7 +33,7 @@ public class Barbershop implements Parcelable
     private OpeningHours openingHours;
     @SerializedName("photos")
     @Expose
-    private List<Photo> photos = new ArrayList<Photo>();
+    private List<Photo> photos = new ArrayList<>();
     @SerializedName("place_id")
     @Expose
     private String placeId;
@@ -158,13 +158,11 @@ public class Barbershop implements Parcelable
 
     public String getPhotoUrl() {
         if (getPhotos().size() > 0) {
-            StringBuilder photoUrl = new StringBuilder()
-                    .append(BarbershopsDB.API_BASE_URL).append("place/photo?")
-                    .append("key=").append(BarbershopsDB.MAPS_API_KEY)
-                    .append("&photoreference=").append(getPhotos().get(0).getPhotoReference())
-                    .append("&maxwidth=1080");
 
-            return photoUrl.toString();
+            return BarbershopsDB.API_BASE_URL + "place/photo?" +
+                    "key=" + BarbershopsDB.MAPS_API_KEY +
+                    "&photoreference=" + getPhotos().get(0).getPhotoReference() +
+                    "&maxwidth=1080";
         }
 
         return null;

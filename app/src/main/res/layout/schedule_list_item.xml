@@ -104,7 +104,8 @@
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_barbershop_name"
-                    app:srcCompat="@drawable/ic_expand_more_black_36" />
+                    app:srcCompat="@drawable/ic_expand_more_black_36"
+                    android:contentDescription="@string/description_expand_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -150,7 +151,7 @@
                     tools:text="+1 212-470-7204" />
 
                 <ImageView
-                    android:id="@+id/iv_delete"
+                    android:id="@+id/iv_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -158,7 +159,8 @@
                     app:layout_constraintBottom_toBottomOf="@+id/iv_directions"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/iv_directions"
-                    app:srcCompat="@drawable/ic_delete_black_24" />
+                    app:srcCompat="@drawable/ic_delete_black_24"
+                    android:contentDescription="@string/description_cancel_appointment_icon" />
 
                 <ImageView
                     android:id="@+id/iv_directions"
@@ -168,9 +170,10 @@
                     android:tint="@android:color/black"
                     android:visibility="@{ safeUnbox(appointment.hasAlreadyPassed()) ? View.GONE : View.VISIBLE }"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_info"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_delete"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_cancel"
                     app:layout_constraintTop_toTopOf="@+id/iv_info"
-                    app:srcCompat="@drawable/ic_directions_white_24" />
+                    app:srcCompat="@drawable/ic_directions_white_24"
+                    android:contentDescription="@string/description_get_directions_icon" />
 
                 <ImageView
                     android:id="@+id/iv_info"
@@ -180,7 +183,8 @@
                     app:layout_constraintBottom_toTopOf="@+id/tv_phone"
                     app:layout_constraintEnd_toStartOf="@+id/iv_directions"
                     app:layout_constraintTop_toBottomOf="@+id/tv_phone"
-                    app:srcCompat="@drawable/ic_info_black_24" />
+                    app:srcCompat="@drawable/ic_info_black_24"
+                    android:contentDescription="@string/description_barbershop_information_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

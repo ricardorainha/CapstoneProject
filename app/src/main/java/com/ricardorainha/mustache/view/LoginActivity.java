@@ -122,9 +122,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
         if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
@@ -148,25 +145,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private boolean fieldsAreValid() {
-        // Reset errors.
         binding.email.setError(null);
         binding.password.setError(null);
 
-        // Store values at the time of the login attempt.
         String email = binding.email.getText().toString();
         String password = binding.password.getText().toString();
 
         boolean hasErrors = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
             binding.password.setError(getString(R.string.error_invalid_password));
             focusView = binding.password;
             hasErrors = true;
         }
 
-        // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             binding.email.setError(getString(R.string.error_field_required));
             focusView = binding.email;
@@ -178,8 +171,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
         }
 
         if (hasErrors) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
         }
 
@@ -204,25 +195,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            binding.loginProgress.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-        }
+        binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+        binding.loginProgress.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                binding.loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     @Override
@@ -232,13 +213,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
                 Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
                         ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
 
-                // Select only email addresses.
                 ContactsContract.Contacts.Data.MIMETYPE +
                         " = ?", new String[]{ContactsContract.CommonDataKinds.Email
                 .CONTENT_ITEM_TYPE},
 
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
@@ -260,7 +238,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);

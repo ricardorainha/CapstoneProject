@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentsViewHolder> {
 
-    private ScheduleListItemBinding binding;
     private List<Appointment> appointments;
     private ClickListener listener;
 
@@ -36,10 +35,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     @Override
     public AppointmentsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        binding = DataBindingUtil.inflate(inflater, R.layout.schedule_list_item, parent, false);
-        AppointmentsViewHolder viewHolder = new AppointmentsViewHolder(binding);
+        ScheduleListItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.schedule_list_item, parent, false);
 
-        return viewHolder;
+        return new AppointmentsViewHolder(binding);
     }
 
     @Override
@@ -73,7 +71,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             date.setTimeInMillis(appointment.getTime());
             DateFormat timeFormat = DateFormat.getTimeInstance(java.text.DateFormat.SHORT);
 
-            binding.tvMonth.setText(date.getDisplayName(Calendar.MONTH, Calendar.SHORT_FORMAT, Locale.getDefault()).toUpperCase());
+            binding.tvMonth.setText(date.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()).toUpperCase());
             binding.tvDay.setText(String.valueOf(date.get(Calendar.DAY_OF_MONTH)));
             binding.tvTime.setText(timeFormat.format(date.getTime()));
             binding.clScheduleMain.setOnClickListener(v -> {
@@ -86,10 +84,10 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
 
             binding.ivInfo.setOnClickListener(v -> listener.onInfoClicked(appointment.getBarbershop()));
             binding.ivDirections.setOnClickListener(v -> listener.onDirectionsClicked(appointment));
-            binding.ivDelete.setOnClickListener(v -> listener.onCancelClicked(appointment));
+            binding.ivCancel.setOnClickListener(v -> listener.onCancelClicked(appointment));
             Session.getInstance().getOnlineStatus().observeForever(connected -> {
-                binding.ivDelete.setEnabled(connected);
-                binding.ivDelete.setAlpha(connected ? 1.0f : 0.4f);
+                binding.ivCancel.setEnabled(connected);
+                binding.ivCancel.setAlpha(connected ? 1.0f : 0.4f);
             });
 
             binding.executePendingBindings();

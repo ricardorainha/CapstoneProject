@@ -17,7 +17,7 @@ public class Photo implements Parcelable
     private int height;
     @SerializedName("html_attributions")
     @Expose
-    private List<String> htmlAttributions = new ArrayList<String>();
+    private List<String> htmlAttributions = new ArrayList<>();
     @SerializedName("photo_reference")
     @Expose
     private String photoReference;

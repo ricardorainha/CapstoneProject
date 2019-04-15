@@ -16,7 +16,7 @@ public class FavoritesViewModel extends ViewModel implements BarbershopsAdapter.
     private MutableLiveData<Barbershop> selectedBarbershop = new MutableLiveData<>();
 
     public FavoritesViewModel() {
-        Session.getInstance().getUser().observeForever(user -> updateAdapter(user));
+        Session.getInstance().getUser().observeForever(this::updateAdapter);
     }
 
     public MutableLiveData<BarbershopsAdapter> getAdapter() {

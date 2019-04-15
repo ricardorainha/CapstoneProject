@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Mustache</string>
-    <string name="title_activity_maps">Map</string>
     <string name="oauth_web_client_id">929872666692-m4djd8nb0sg81bddn77k4dndjtc3aagc.apps.googleusercontent.com</string>
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">262994831302065</string>
@@ -75,4 +74,16 @@
     </array>
     <string name="appwidget_title">Next Appointment</string>
     <string name="no_future_appointment">No Future Appointment</string>
+    <string name="forgot_password_reset_it">Forgot password? Reset it!</string>
+    <string name="description_barbershop_photo">Barbershop Photo</string>
+    <string name="description_mustache_logo">Mustache Logo</string>
+    <string name="description_expand_icon">Expand Icon</string>
+    <string name="description_user_profile_photo">User Profile Photo</string>
+    <string name="description_cancel_appointment_icon">Cancel Appointment Icon</string>
+    <string name="description_get_directions_icon">Get Directions Icon</string>
+    <string name="description_barbershop_information_icon">Barbershop Information Icon</string>
+    <string name="description_address_icon">Barbershop Address Icon</string>
+    <string name="description_barbershop_phone_icon">Barbershop Phone Icon</string>
+    <string name="description_barbershop_website_icon">Barbershop Website Icon</string>
+    <string name="description_barbershop_hours_icon">Barbershop Hours Icon</string>
 </resources>

@@ -81,9 +81,7 @@ public class BarbershopsDB extends Observable {
                 lastLatitude = latitude;
                 lastLongitude = longitude;
 
-                StringBuilder location = new StringBuilder().append(latitude).append(",").append(longitude);
-
-                Call<BarbershopsResult> call = barbershopsAPI.getBarbershops(location.toString());
+                Call<BarbershopsResult> call = barbershopsAPI.getBarbershops(latitude + "," + longitude);
                 call.enqueue(new Callback<BarbershopsResult>() {
                     @Override
                     public void onResponse(Call<BarbershopsResult> call, Response<BarbershopsResult> response) {
