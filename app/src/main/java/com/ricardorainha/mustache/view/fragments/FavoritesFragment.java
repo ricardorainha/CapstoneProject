@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 public class FavoritesFragment extends Fragment {
 
@@ -38,7 +39,12 @@ public class FavoritesFragment extends Fragment {
     }
 
     private void configureFields() {
-        binding.rvFavorites.setLayoutManager(new LinearLayoutManager(getContext()));
+        if (binding.clFavoritesLandscape == null) {
+            binding.rvFavorites.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+        else {
+            binding.rvFavorites.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        }
         binding.rvFavorites.setHasFixedSize(true);
     }
 

@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 public class BarbershopsListFragment extends Fragment {
 
@@ -38,7 +39,12 @@ public class BarbershopsListFragment extends Fragment {
     }
 
     private void configureFields() {
-        binding.rvBarbershops.setLayoutManager(new LinearLayoutManager(getContext()));
+        if (binding.clListLandscape == null) {
+            binding.rvBarbershops.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+        else {
+            binding.rvBarbershops.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        }
         binding.rvBarbershops.setHasFixedSize(true);
 
     }
