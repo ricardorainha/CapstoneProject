@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                         startProfileActivity();
                     }
                 }
+                configureProfilePicture();
 
                 Session.getInstance().updateOnlineStatus(MainActivity.this);
             }
