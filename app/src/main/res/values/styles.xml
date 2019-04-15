@@ -1,7 +1,9 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppMaterialTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <!-- MaterialComponents' Bridge themes inherit from AppCompat theme -->
+    <!-- MaterialComponents theme is needed by some components on this app like BottomNavigationView -->
+    <style name="AppMaterialTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
