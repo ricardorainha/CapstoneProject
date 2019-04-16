@@ -42,10 +42,16 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem profileItem;
     private ConnectionChangeReceiver connectionChangeReceiver;
     private boolean decidedFirstFragment = false;
+    private int activeFragmentId = 0;
+    private final String ACTIVE_FRAGMENT_ID_KEY = "ACTIVE_FRAGMENT_ID_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            this.activeFragmentId = savedInstanceState.getInt(ACTIVE_FRAGMENT_ID_KEY);
+        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
@@ -96,6 +102,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ACTIVE_FRAGMENT_ID_KEY, activeFragmentId);
+        super.onSaveInstanceState(outState);
+    }
+
     private void configureObservables() {
         viewModel.getUserInfoReceived().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
@@ -114,14 +126,34 @@ public class MainActivity extends AppCompatActivity {
         Session.getInstance().getOnlineStatus().observe(this, connected -> {
             binding.navigationBar.getMenu().getItem(0).setEnabled(connected);
 
-            if (!decidedFirstFragment) {
-                decidedFirstFragment = true;
-                binding.navigationBar.getMenu().getItem(connected ? 0 : 1).setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, connected ? new BarbershopsFragment() : new FavoritesFragment()).commit();
+            if (this.activeFragmentId == 0) {
+                if (!decidedFirstFragment) {
+                    decidedFirstFragment = true;
+                    binding.navigationBar.getMenu().getItem(connected ? 0 : 1).setChecked(true);
+                    activeFragmentId = 0;
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, connected ? new BarbershopsFragment() : new FavoritesFragment()).commit();
+                } else if (!connected && binding.navigationBar.getMenu().getItem(0).isChecked()) {
+                    binding.navigationBar.getMenu().getItem(1).setChecked(true);
+                    activeFragmentId = 1;
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FavoritesFragment()).commit();
+                }
             }
-            else if (!connected && binding.navigationBar.getMenu().getItem(0).isChecked()) {
-                binding.navigationBar.getMenu().getItem(1).setChecked(true);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FavoritesFragment()).commit();
+            else {
+                Fragment activeFragment = null;
+                switch (activeFragmentId) {
+                    case 1:
+                        activeFragment = new FavoritesFragment();
+                        activeFragmentId = 1;
+                        break;
+                    case 2:
+                        activeFragment = new MyScheduleFragment();
+                        activeFragmentId = 2;
+                        break;
+                }
+
+                if (activeFragment != null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, activeFragment).commit();
+                }
             }
 
             if (!connected) {
@@ -141,12 +173,15 @@ public class MainActivity extends AppCompatActivity {
         switch (menuItem.getItemId()) {
             case R.id.navigation_barbershops:
                 activeFragment = new BarbershopsFragment();
+                activeFragmentId = 0;
                 break;
             case R.id.navigation_favorites:
                 activeFragment = new FavoritesFragment();
+                activeFragmentId = 1;
                 break;
             case R.id.navigation_my_schedule:
                 activeFragment = new MyScheduleFragment();
+                activeFragmentId = 2;
                 break;
         }
 
