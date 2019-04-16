@@ -63,21 +63,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
             }
         });
 
-        viewModel.getSignedIn().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (viewModel.getSignedIn().get()) {
-                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(mainIntent);
-                    finish();
-                }
-                else {
-                    String finalMessage = (viewModel.getMessage() == null) ? getString(viewModel.getMessageId()) : getString(viewModel.getMessageId(), viewModel.getMessage());
-                    Snackbar.make(binding.loginRoot, finalMessage, Snackbar.LENGTH_LONG).show();
+        viewModel.getSignedIn().observe(this, signedIn -> {
+            if (signedIn) {
+                Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(mainIntent);
+                finish();
+            }
+            else {
+                String finalMessage = (viewModel.getMessage() == null) ? getString(viewModel.getMessageId()) : getString(viewModel.getMessageId(), viewModel.getMessage());
+                Snackbar.make(binding.loginRoot, finalMessage, Snackbar.LENGTH_LONG).show();
 
-                    if (viewModel.getMessageId() == R.string.user_login_fail_message) {
-                        binding.resetPassword.setVisibility(View.VISIBLE);
-                    }
+                if (viewModel.getMessageId() == R.string.user_login_fail_message) {
+                    binding.resetPassword.setVisibility(View.VISIBLE);
                 }
             }
         });

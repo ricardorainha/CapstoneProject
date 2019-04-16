@@ -17,7 +17,7 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Log
     private MutableLiveData<String> email = new MutableLiveData<>();
     private MutableLiveData<String> password = new MutableLiveData<>();
     private ObservableField<Boolean> loading = new ObservableField<>();
-    private ObservableField<Boolean> signedIn = new ObservableField<>();
+    private MutableLiveData<Boolean> signedIn = new MutableLiveData<>();
     private ObservableField<Boolean> signedUp = new ObservableField<>();
     private ObservableField<Boolean> passwordReset = new ObservableField<>();
     private int messageId = -1;
@@ -59,7 +59,7 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Log
         return loading;
     }
 
-    public ObservableField<Boolean> getSignedIn() {
+    public MutableLiveData<Boolean> getSignedIn() {
         return signedIn;
     }
 
@@ -125,7 +125,7 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Log
         loading.set(false);
 
         if (resultCode == AuthManager.RESULT_USER_SIGN_IN_SUCCESS) {
-            signedIn.set(true);
+            signedIn.setValue(true);
         }
         else {
             this.messageId = R.string.user_login_unknown_error_message;
@@ -140,7 +140,7 @@ public class LoginActivityViewModel extends ViewModel implements AuthManager.Log
                     break;
             }
 
-            signedIn.set(false);
+            signedIn.setValue(false);
         }
     }
 

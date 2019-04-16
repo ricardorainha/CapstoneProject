@@ -217,6 +217,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void unregisterConnectionReceiver() {
-        unregisterReceiver(connectionChangeReceiver);
+        try {
+            unregisterReceiver(connectionChangeReceiver);
+        }
+        catch (IllegalArgumentException e) {}
     }
 }
