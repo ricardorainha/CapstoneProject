@@ -54,7 +54,11 @@ public class MainActivity extends AppCompatActivity {
 
         configureObservables();
         configureFields();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         if (AuthManager.getInstance().needToLogin()) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
@@ -62,14 +66,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             viewModel.requestUserInfo();
+            registerConnectionReceiver();
         }
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerConnectionReceiver();
-        configureProfilePicture();
     }
 
     @Override
@@ -83,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         this.profileItem = menu.findItem(R.id.menu_profile);
+        configureProfilePicture();
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -104,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
                     if (!SharedPrefUtils.hasCompletedProfile(MainActivity.this)) {
                         startProfileActivity();
                     }
-                }
-                configureProfilePicture();
 
-                Session.getInstance().updateOnlineStatus(MainActivity.this);
+                    configureProfilePicture();
+                    Session.getInstance().updateOnlineStatus(MainActivity.this);
+                }
             }
         });
 
@@ -157,14 +157,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void configureProfilePicture() {
         if (profileItem != null) {
-            Session.getInstance().getUser().getValue().getPhotoReference().getDownloadUrl()
-                    .addOnSuccessListener(uri -> Glide.with(this).load(uri.toString()).diskCacheStrategy(DiskCacheStrategy.ALL).apply(RequestOptions.circleCropTransform()).into(new SimpleTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            profileItem.setIcon(resource);
-                        }
-                    }))
-                    .addOnFailureListener(e -> profileItem.setIcon(R.drawable.ic_account_white_36));
+            if (Session.getInstance().getUser().getValue() != null) {
+                Session.getInstance().getUser().getValue().getPhotoReference().getDownloadUrl()
+                        .addOnSuccessListener(uri -> Glide.with(getApplicationContext()).load(uri.toString()).diskCacheStrategy(DiskCacheStrategy.ALL).apply(RequestOptions.circleCropTransform()).into(new SimpleTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                profileItem.setIcon(resource);
+                            }
+                        }))
+                        .addOnFailureListener(e -> profileItem.setIcon(R.drawable.ic_account_white_36));
+            }
         }
     }
 
